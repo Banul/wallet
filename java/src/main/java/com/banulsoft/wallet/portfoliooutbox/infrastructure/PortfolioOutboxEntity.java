@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.portfolio.infrastructure;
+package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
 import com.banulsoft.wallet.shared.BaseEntity;
 import jakarta.persistence.Entity;
@@ -8,6 +8,6 @@ import java.util.UUID;
 
 @Entity
 @Table
-public class PortfolioEntity extends BaseEntity {
+class PortfolioOutboxEntity extends BaseEntity {
     private UUID id;
 }
