@@ -20,7 +20,21 @@ class PortfolioOutboxEntity extends BaseEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<Asset> assets;
 
+    private Status status;
+
     public PortfolioOutboxEntity(Set<Asset> assets) {
         this.assets = assets;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Set<Asset> getAssets() {
+        return assets;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 }

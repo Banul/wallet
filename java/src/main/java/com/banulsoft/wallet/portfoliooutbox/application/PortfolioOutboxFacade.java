@@ -1,16 +1,19 @@
 package com.banulsoft.wallet.portfoliooutbox.application;
 
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
-import com.banulsoft.wallet.portfoliooutbox.infrastructure.PortfolioOutboxRepository;
-import lombok.RequiredArgsConstructor;
+import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
-public class PortfolioFacade {
-    private PortfolioOutboxRepository portfolioOutboxRepository;
+public class PortfolioOutboxFacade {
+    private final PersistancePort persistancePort;
+
+    public PortfolioOutboxFacade(PersistancePort persistancePort) {
+        this.persistancePort = persistancePort;
+    }
+
     public PortfolioOutbox create(PortfolioCreateCommand portfolioCreateCommand) {
         PortfolioOutbox portfolioOutbox = new PortfolioOutbox(portfolioCreateCommand);
-        return portfolioOutboxRepository.save(portfolioOutbox);
+        return persistancePort.save(portfolioOutbox);
     }
 }
