@@ -8,16 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PortfolioFacade {
-    private final PortfolioOutboxRepository portfolioOutboxRepository;
+    private PortfolioOutboxRepository portfolioOutboxRepository;
     public PortfolioOutbox create(PortfolioCreateCommand portfolioCreateCommand) {
         PortfolioOutbox portfolioOutbox = new PortfolioOutbox(portfolioCreateCommand);
-        portfolioOutboxRepository.save()
+        return portfolioOutboxRepository.save(portfolioOutbox);
     }
-
-//    private Portfolio create(PortfolioCreateCommand createCommand) {
-//        createCommand.assets().stream().map(asset -> {
-//
-//        })
-//        return new Portfolio();
-//    }
 }
