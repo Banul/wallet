@@ -24,4 +24,12 @@ public abstract class BaseEntity {
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
     private Instant createdDate;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
 }

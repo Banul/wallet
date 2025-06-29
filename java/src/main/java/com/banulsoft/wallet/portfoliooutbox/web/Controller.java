@@ -4,6 +4,7 @@ import com.banulsoft.wallet.portfoliooutbox.application.PortfolioCreateCommand;
 import com.banulsoft.wallet.portfoliooutbox.application.PortfolioOutboxFacade;
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ class Controller {
     }
 
     @PostMapping
-    PortfolioResponseDto create(PortfolioCreateDto portfolioCreateDto) {
+    PortfolioResponseDto create(@RequestBody PortfolioCreateDto portfolioCreateDto) {
         PortfolioCreateCommand createCommand = CommandAdapter.createCommand(portfolioCreateDto);
         PortfolioOutbox portfolio = portfolioOutboxFacade.create(createCommand);
         return PortfolioResponseDto.of(portfolio.getAssets());

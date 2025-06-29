@@ -17,6 +17,6 @@ interface PortfolioOutboxJpaRepository extends JpaRepository<PortfolioOutboxEnti
     @Modifying
     void markAsFailure(UUID requestId);
 
-    @Query(value = "select * from portfolio_request pr where pr.status = 'UNPROCESSED")
+    @Query(value = "select * from portfolio_request pr", nativeQuery = true)
     Set<PortfolioOutboxEntity> findReadyForProcessing();
 }
