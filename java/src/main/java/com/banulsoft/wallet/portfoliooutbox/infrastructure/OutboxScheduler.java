@@ -1,13 +1,11 @@
-package com.banulsoft.wallet.portfoliooutbox.application;
+package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
-import com.banulsoft.wallet.portfoliooutbox.domain.MessagingPort;
-import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
-import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
-import com.banulsoft.wallet.portfoliooutbox.infrastructure.PortfolioCreationRequestedEvent;
+import com.banulsoft.wallet.portfoliooutbox.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 class OutboxScheduler {
@@ -23,9 +21,14 @@ class OutboxScheduler {
     public void sendToKafka() {
         Set<PortfolioOutbox> readyForProcessing = persistancePort.findReadyForProcessing();
         readyForProcessing.forEach(entry -> {
-            PortfolioCreationRequestedEvent event = new PortfolioCreationRequestedEvent(entry.getId(), entry.getAssets());
+            Set<Ticker> tickers = entry.getRequests().stream().map(AssetsCreationRequest::ticker)
+                    .collect(Collectors.toSet())
+                    .stream()
+                    .map(Ticker::new)
+                    .collect(Collectors.toSet());
+
+            PortfolioCreationRequestedEvent event = new PortfolioCreationRequestedEvent(entry.getId(), tickers);
             messagingPort.sendPortfolioRequest(event);
         });
     }
-
 }

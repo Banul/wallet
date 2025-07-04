@@ -1,15 +1,13 @@
 package com.banulsoft.wallet.portfoliooutbox.web;
 
-import com.banulsoft.wallet.portfoliooutbox.application.AssetCreateCommand;
-import com.banulsoft.wallet.portfoliooutbox.domain.Asset;
+import com.banulsoft.wallet.portfoliooutbox.domain.AssetsCreationRequest;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 record PortfolioResponseDto(Set<AssetResponseDto> assets) {
-    static PortfolioResponseDto of(Set<Asset> assets) {
-        Set<AssetResponseDto> assetResponseDtos = assets.stream()
+    static PortfolioResponseDto of(Set<AssetsCreationRequest> assetsCreationRequests) {
+        Set<AssetResponseDto> assetResponseDtos = assetsCreationRequests.stream()
                 .map(asset -> new AssetResponseDto(asset.ticker(), asset.amount()))
                 .collect(Collectors.toSet());
 

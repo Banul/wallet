@@ -4,3 +4,4 @@ from dataclasses import dataclass, asdict
 class StockInformation:
     ticker: str
     price: float
+    currency: str

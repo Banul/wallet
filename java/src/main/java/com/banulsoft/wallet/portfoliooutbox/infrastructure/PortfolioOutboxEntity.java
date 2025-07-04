@@ -1,6 +1,6 @@
 package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
-import com.banulsoft.wallet.portfoliooutbox.domain.Asset;
+import com.banulsoft.wallet.portfoliooutbox.domain.AssetsCreationRequest;
 import com.banulsoft.wallet.shared.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,23 +16,23 @@ import java.util.UUID;
 class PortfolioOutboxEntity extends BaseEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "assets")
-    private Set<Asset> assets;
+    private Set<AssetsCreationRequest> assetsCreationRequests;
 
     @Column(name = "status")
     private Status status;
 
     protected PortfolioOutboxEntity() {}
 
-    public PortfolioOutboxEntity(Set<Asset> assets) {
-        this.assets = assets;
+    public PortfolioOutboxEntity(Set<AssetsCreationRequest> assetsCreationRequests) {
+        this.assetsCreationRequests = assetsCreationRequests;
     }
 
     public UUID getId() {
         return super.getId();
     }
 
-    public Set<Asset> getAssets() {
-        return assets;
+    public Set<AssetsCreationRequest> getAssets() {
+        return assetsCreationRequests;
     }
 
     public Status getStatus() {

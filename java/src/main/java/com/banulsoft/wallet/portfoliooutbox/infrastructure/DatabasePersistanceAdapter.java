@@ -1,6 +1,5 @@
 package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
-import com.banulsoft.wallet.portfoliooutbox.domain.Asset;
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,7 @@ class DatabasePersistanceAdapter implements PersistancePort {
 
     @Override
     public PortfolioOutbox save(PortfolioOutbox portfolio) {
-        PortfolioOutboxEntity entity = new PortfolioOutboxEntity(portfolio.getAssets());
+        PortfolioOutboxEntity entity = new PortfolioOutboxEntity(portfolio.getRequests());
         portfolioOutboxJpaRepository.save(entity);
         return portfolio;
     }

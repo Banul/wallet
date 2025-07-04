@@ -1,0 +1,5 @@
+-- ticker
+-- cena
+-- nie ma sensu zapisywać obecnej ceny
+-- request będzie ok - tworzymy portfolio
+-- request jest ok - firmy nie ma w company tracking list to dodajemy do listy

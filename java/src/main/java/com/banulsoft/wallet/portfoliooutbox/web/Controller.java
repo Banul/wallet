@@ -21,6 +21,6 @@ class Controller {
     PortfolioResponseDto create(@RequestBody PortfolioCreateDto portfolioCreateDto) {
         PortfolioCreateCommand createCommand = CommandAdapter.createCommand(portfolioCreateDto);
         PortfolioOutbox portfolio = portfolioOutboxFacade.create(createCommand);
-        return PortfolioResponseDto.of(portfolio.getAssets());
+        return PortfolioResponseDto.of(portfolio.getRequests());
     }
 }

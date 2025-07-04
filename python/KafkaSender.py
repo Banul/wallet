@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import asdict
 from kafka import KafkaProducer
 import json
 from StockInformation import StockInformation
@@ -6,13 +6,13 @@ from StockInformation import StockInformation
 
 # 2. Inicjalizacja producenta Kafka
 producer = KafkaProducer(
-    bootstrap_servers=['host.docker.internal:29092'],  # Używaj portu 29092 dla hosta
+    bootstrap_servers=['host.docker.internal:29092'],
     value_serializer=lambda v: json.dumps(v).encode('utf-8'),
-    request_timeout_ms=120000  # Zwiększ timeout do 120 sekund
+    request_timeout_ms=120000
 )
 
 
-TOPIC = 'stock_topic'
+TOPIC = 'portfolio_response_topic'
 
 
 def send_stock_info(stock: StockInformation):
