@@ -30,6 +30,7 @@ class PortfolioOutboxMessagingAdapter implements MessagingPort {
         completableFuture.whenComplete((result, ex) -> {
             if (ex == null) {
                 persistancePort.markAsSuccess(portfolioCreationRequestedEvent.requestId());
+                // todo -> add to tracked companies
             } else {
                 persistancePort.markAsFailure(portfolioCreationRequestedEvent.requestId());
             }
