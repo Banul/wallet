@@ -23,7 +23,11 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://host.docker.internal:29092
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "stock_topic:1:1, portfolio_response_topic:1:1"
+      # stock_tracking_request -> request to start tracking company
+      # stock_tracking_response -> response about whether company can be tracked
+      # tracked_companies_request -> information about what companies we should track
+      # stock_price -> company price information
+      KAFKA_CREATE_TOPICS: "stock_tracking_request:1:1, stock_tracking_response:1:1, stock_prices_response:1:1"
     networks:
       - kafka-net
 

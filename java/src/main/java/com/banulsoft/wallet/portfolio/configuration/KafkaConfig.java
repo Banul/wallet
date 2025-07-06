@@ -1,6 +1,6 @@
 package com.banulsoft.wallet.portfolio.configuration;
 
-import com.banulsoft.wallet.portfolio.infrastructure.StockPriceEvent;
+import com.banulsoft.wallet.portfolio.infrastructure.PositionCreationResponse;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class KafkaConfig {
 
     @Bean
-    public ConsumerFactory<String, StockPriceEvent> consumerFactory() {
+    public ConsumerFactory<String, PositionCreationResponse> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -28,13 +28,13 @@ public class KafkaConfig {
         return new DefaultKafkaConsumerFactory<>(
                 props,
                 new StringDeserializer(),
-                new JsonDeserializer<>(StockPriceEvent.class)
+                new JsonDeserializer<>(PositionCreationResponse.class)
         );
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, StockPriceEvent> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, StockPriceEvent> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, PositionCreationResponse> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PositionCreationResponse> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(3);

@@ -9,13 +9,13 @@ public class PortfolioMessagingAdapter {
 
     @KafkaListener(
             id = "stock-listener",
-            topics = "portfolio_response_topic",
+            topics = "stock_tracking_response",
             groupId = "my-group",
             containerFactory = "kafkaListenerContainerFactory"
     )
-    public void handleStockPrice(@Payload StockPriceEvent event) {
+    public void handleStockPrice(@Payload PositionCreationResponse event) {
         System.out.println("Received stock update: " + event.getTicker()
-                + " - $" + event.getPrice());
+                + "Status is: " + event.getStatus());
         // Tutaj dodaj logikę przetwarzania (np. zapis do bazy, aktualizacja portfela)
     }
 }
