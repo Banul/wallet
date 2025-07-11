@@ -1,6 +1,7 @@
 package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
 import com.banulsoft.wallet.portfoliooutbox.domain.*;
+import com.banulsoft.wallet.shared.Ticker;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

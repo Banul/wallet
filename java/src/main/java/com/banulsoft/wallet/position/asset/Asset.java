@@ -1,5 +1,7 @@
 package com.banulsoft.wallet.position.asset;
 
+import com.banulsoft.wallet.shared.Ticker;
+
 public class Asset {
     private Ticker ticker;
     private Type type;

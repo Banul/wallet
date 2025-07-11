@@ -3,7 +3,7 @@ from kafka import KafkaProducer
 import json
 
 import StockTrackingStatus
-
+from StockValuation import StockValuation
 
 producer = KafkaProducer(
     bootstrap_servers=['host.docker.internal:29092'],
@@ -11,10 +11,10 @@ producer = KafkaProducer(
     request_timeout_ms=120000
 )
 
-TOPIC = 'stock_tracking_response'
+TOPIC = 'stock_prices_response'
 
-def send_tracking_status(status: StockTrackingStatus):
-    data = asdict(status)
+def send_stock_valuation(valuation: StockValuation):
+    data = asdict(valuation)
     future = producer.send(TOPIC, value=data)
     record_meta = future.get(timeout=10)
     return record_meta

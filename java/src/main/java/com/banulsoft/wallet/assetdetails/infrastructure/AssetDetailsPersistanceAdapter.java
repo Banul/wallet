@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 class AssetDetailsPersistanceAdapter implements PersistancePort {
     private final AssetDetailsJpaRepository assetDetailsJpaRepository;
 
-
     @Override
     public AssetDetails save(AssetDetails assetDetails) {
         AssetDetailsEntity assetDetailsEntity = AssetDetailsEntity.from(assetDetails);

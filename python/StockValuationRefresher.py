@@ -1,7 +1,7 @@
 import sqlite3
 import time
 
-import StockTrackingResponseSender
+import StockValuationResponseSender
 from StockFetcher import StockFetcher
 
 
@@ -22,8 +22,8 @@ while True:
       tickers = query_database()
       print(tickers)
       for ticker in tickers:
-        stockInfo = stockFetcher.fetch_stock_information(ticker)
-        StockTrackingResponseSender.send_stock_info(stockInfo)
+        stockValuation = stockFetcher.fetch_stock_information(ticker)
+        StockValuationResponseSender.send_stock_valuation(stockValuation)
       time.sleep(interval)
     except Exception as e:
         print(e)

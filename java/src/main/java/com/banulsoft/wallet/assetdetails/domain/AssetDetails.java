@@ -1,7 +1,7 @@
 package com.banulsoft.wallet.assetdetails.domain;
 
 /*
-    Tracking current price of assets our users are interested in
+    Tracking current price of tickers our users are interested in
  */
 
 import lombok.Getter;

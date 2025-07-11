@@ -2,9 +2,7 @@ package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
 import com.banulsoft.wallet.portfoliooutbox.domain.AssetsCreationRequest;
 import com.banulsoft.wallet.shared.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -15,10 +13,11 @@ import java.util.UUID;
 @Table(name = "portfolio_request")
 class PortfolioOutboxEntity extends BaseEntity {
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "assets")
+    @Column(name = "assets_creation_requests")
     private Set<AssetsCreationRequest> assetsCreationRequests;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     protected PortfolioOutboxEntity() {}
