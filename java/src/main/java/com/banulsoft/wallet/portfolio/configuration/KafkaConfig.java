@@ -1,6 +1,7 @@
 package com.banulsoft.wallet.portfolio.configuration;
 
-import com.banulsoft.wallet.portfolio.infrastructure.PositionCreationResponse;
+import com.banulsoft.wallet.shared.kafka.PositionCreationResponse;
+import com.banulsoft.wallet.shared.kafka.StockValuationResponse;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -19,12 +20,12 @@ import java.util.Map;
 public class KafkaConfig {
 
     @Bean
-    public ConsumerFactory<String, PositionCreationResponse> consumerFactory() {
+    public ConsumerFactory<String, PositionCreationResponse> positionCreationResponseConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.banulsoft.wallet.portfolio.infrastructure");
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return new DefaultKafkaConsumerFactory<>(
                 props,
                 new StringDeserializer(),
@@ -33,10 +34,35 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PositionCreationResponse> kafkaListenerContainerFactory() {
+    public ConsumerFactory<String, StockValuationResponse> stockValuationConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        return new DefaultKafkaConsumerFactory<>(
+                props,
+                new StringDeserializer(),
+                new JsonDeserializer<>(StockValuationResponse.class)
+        );
+    }
+
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, PositionCreationResponse> kafkaListenerContainerFactoryPortfolioCreationResponse() {
         ConcurrentKafkaListenerContainerFactory<String, PositionCreationResponse> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(positionCreationResponseConsumerFactory());
+        factory.setConcurrency(3);
+        factory.getContainerProperties().setPollTimeout(3000);
+        return factory;
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, StockValuationResponse> kafkaListenerContainerFactoryStockValuationResponse() {
+        ConcurrentKafkaListenerContainerFactory<String, StockValuationResponse> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(stockValuationConsumerFactory());
         factory.setConcurrency(3);
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;

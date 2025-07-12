@@ -36,6 +36,8 @@ class PortfolioOutboxMessagingAdapter implements MessagingPort {
             if (ex == null) {
                 transactionTemplate.executeWithoutResult(status -> {
                     persistancePort.markAsSuccess(portfolioCreationRequestedEvent.requestId());
+
+                    // TODO: not here, but in listener
                     persistancePort.addTrackedCompanies(portfolioCreationRequestedEvent.tickers());
                 });
             } else {

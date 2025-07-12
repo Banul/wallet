@@ -1,5 +1,6 @@
 package com.banulsoft.wallet.portfolio.infrastructure;
 
+import com.banulsoft.wallet.shared.kafka.PositionCreationResponse;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ public class PortfolioMessagingAdapter {
             id = "stock-listener",
             topics = "stock_tracking_response",
             groupId = "my-group",
-            containerFactory = "kafkaListenerContainerFactory"
+            containerFactory = "kafkaListenerContainerFactoryPortfolioCreationResponse"
     )
     public void handleStockPrice(@Payload PositionCreationResponse event) {
         System.out.println("Received stock update: " + event.getTicker()

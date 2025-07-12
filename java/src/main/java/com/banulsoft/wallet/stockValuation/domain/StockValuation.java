@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.assetdetails.domain;
+package com.banulsoft.wallet.stockValuation.domain;
 
 /*
     Tracking current price of tickers our users are interested in
@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.math.BigDecimal;
 
 @Getter
-public class AssetDetails {
+public class StockValuation {
     private Ticker ticker;
     private Price price;
 

@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.portfolio.infrastructure;
+package com.banulsoft.wallet.shared.kafka;
 
 import lombok.Getter;
 

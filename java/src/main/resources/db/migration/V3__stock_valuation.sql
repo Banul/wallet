@@ -1,6 +1,5 @@
-create table if not exists asset_details(
+create table if not exists stock_valuation (
     id uuid primary key,
-    portfolio_id uuid not null references portfolio(id) on delete cascade,
     ticker varchar,
     amount numeric,
     currency varchar,

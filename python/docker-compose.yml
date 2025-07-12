@@ -26,8 +26,8 @@ services:
       # stock_tracking_request -> request to start tracking company
       # stock_tracking_response -> response about whether company can be tracked
       # tracked_companies_request -> information about what companies we should track
-      # stock_prices_response -> company price information
-      KAFKA_CREATE_TOPICS: "stock_tracking_request:1:1, stock_tracking_response:1:1, stock_prices_response:1:1"
+      # stock_valuation_response -> company price information
+      KAFKA_CREATE_TOPICS: "stock_tracking_request:1:1, stock_tracking_response:1:1, stock_valuation_response:1:1"
     networks:
       - kafka-net
 

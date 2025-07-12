@@ -11,7 +11,7 @@ producer = KafkaProducer(
     request_timeout_ms=120000
 )
 
-TOPIC = 'stock_prices_response'
+TOPIC = 'stock_valuation_response'
 
 def send_stock_valuation(valuation: StockValuation):
     data = asdict(valuation)

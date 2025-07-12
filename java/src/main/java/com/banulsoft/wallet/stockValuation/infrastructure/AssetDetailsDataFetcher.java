@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.assetdetails.infrastructure;
+package com.banulsoft.wallet.stockValuation.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
