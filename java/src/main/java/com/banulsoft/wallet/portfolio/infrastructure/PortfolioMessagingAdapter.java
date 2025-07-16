@@ -1,12 +1,21 @@
 package com.banulsoft.wallet.portfolio.infrastructure;
 
 import com.banulsoft.wallet.shared.kafka.PositionCreationResponse;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+import java.util.UUID;
+
 @Component
-public class PortfolioMessagingAdapter {
+class PortfolioMessagingAdapter {
+    private final JdbcTemplate jdbcTemplate;
+
+    public PortfolioMessagingAdapter(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @KafkaListener(
             id = "stock-listener",
@@ -14,9 +23,8 @@ public class PortfolioMessagingAdapter {
             groupId = "my-group",
             containerFactory = "kafkaListenerContainerFactoryPortfolioCreationResponse"
     )
-    public void handleStockPrice(@Payload PositionCreationResponse event) {
-        System.out.println("Received stock update: " + event.getTicker()
-                + "Status is: " + event.getStatus());
-        // Tutaj dodaj logikę przetwarzania (np. zapis do bazy, aktualizacja portfela)
+    public void handlePosition(@Payload PositionCreationResponse event) {
+        String sql = "INSERT INTO searched_companies (id, ticker, does_exist) VALUES (?, ?, ?) ON CONFLICT (ticker) DO NOTHING";
+        jdbcTemplate.update(sql, UUID.randomUUID(), event.getTicker(), Objects.equals(event.getStatus(), "OK"));
     }
 }

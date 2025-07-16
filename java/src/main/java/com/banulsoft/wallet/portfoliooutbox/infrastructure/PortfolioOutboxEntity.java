@@ -24,6 +24,7 @@ class PortfolioOutboxEntity extends BaseEntity {
 
     public PortfolioOutboxEntity(Set<AssetsCreationRequest> assetsCreationRequests) {
         this.assetsCreationRequests = assetsCreationRequests;
+        this.status = Status.UNPROCESSED;
     }
 
     public UUID getId() {

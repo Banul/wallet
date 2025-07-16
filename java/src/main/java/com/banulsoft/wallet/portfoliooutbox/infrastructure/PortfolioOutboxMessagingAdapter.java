@@ -3,7 +3,6 @@ package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 import com.banulsoft.wallet.portfoliooutbox.domain.MessagingPort;
 import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -35,14 +34,16 @@ class PortfolioOutboxMessagingAdapter implements MessagingPort {
         completableFuture.whenComplete((result, ex) -> {
             if (ex == null) {
                 transactionTemplate.executeWithoutResult(status -> {
-                    persistancePort.markAsSuccess(portfolioCreationRequestedEvent.requestId());
-
-                    // TODO: not here, but in listener
-                    persistancePort.addTrackedCompanies(portfolioCreationRequestedEvent.tickers());
+                    persistancePort.markAsSent(portfolioCreationRequestedEvent.requestId());
                 });
             } else {
                 persistancePort.markAsFailure(portfolioCreationRequestedEvent.requestId());
             }
         });
+    }
+
+    @Override
+    public void markAsSent(PortfolioCreationRequestedEvent portfolioCreationRequestedEvent) {
+        persistancePort.markAsSent(portfolioCreationRequestedEvent.requestId());
     }
 }

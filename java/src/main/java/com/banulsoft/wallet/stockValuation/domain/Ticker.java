@@ -1,4 +1,4 @@
 package com.banulsoft.wallet.stockValuation.domain;
 
-record Ticker(String ticker) {
+public record Ticker(String ticker) {
 }

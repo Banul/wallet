@@ -31,4 +31,16 @@ public class StockValuationResponse {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+    public String getTicker() {
+        return ticker;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
 }

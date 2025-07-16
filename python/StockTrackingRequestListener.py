@@ -66,7 +66,6 @@ try:
 
             except Exception as e:
                 print(f"Odebrano surowy komunikat: {msg.value()}")
-                StockTrackingResponseSender.send_tracking_status(StockTrackingStatus.StockTrackingStatus(ticker, 'FAILED'))
 
             consumer.commit(asynchronous=False)
 

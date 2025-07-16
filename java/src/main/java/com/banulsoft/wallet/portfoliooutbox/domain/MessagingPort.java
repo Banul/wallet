@@ -4,4 +4,6 @@ import com.banulsoft.wallet.portfoliooutbox.infrastructure.PortfolioCreationRequ
 
 public interface MessagingPort {
     void sendPortfolioRequest(PortfolioCreationRequestedEvent portfolioCreationRequestedEvent);
+
+    void markAsSent(PortfolioCreationRequestedEvent portfolioCreationRequestedEvent);
 }

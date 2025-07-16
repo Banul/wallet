@@ -2,8 +2,6 @@ package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
-import com.banulsoft.wallet.shared.Ticker;
-import org.hibernate.type.SqlTypes;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -14,11 +12,9 @@ import java.util.stream.Collectors;
 @Repository
 class DatabasePersistanceAdapter implements PersistancePort {
     private final PortfolioOutboxJpaRepository portfolioOutboxJpaRepository;
-    private final JdbcTemplate jdbcTemplate;
 
-    public DatabasePersistanceAdapter(PortfolioOutboxJpaRepository portfolioOutboxJpaRepository, JdbcTemplate jdbcTemplate) {
+    public DatabasePersistanceAdapter(PortfolioOutboxJpaRepository portfolioOutboxJpaRepository) {
         this.portfolioOutboxJpaRepository = portfolioOutboxJpaRepository;
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -29,33 +25,34 @@ class DatabasePersistanceAdapter implements PersistancePort {
     }
 
     @Override
-    public void markAsSuccess(UUID requestId) {
-        portfolioOutboxJpaRepository.markAsSuccess(requestId);
-    }
-
-    @Override
     public void markAsFailure(UUID requestId) {
         portfolioOutboxJpaRepository.markAsFailure(requestId);
     }
 
     @Override
-    public Set<PortfolioOutbox> findReadyForProcessing() {
-        Set<PortfolioOutboxEntity> readyForProcessing = portfolioOutboxJpaRepository.findReadyForProcessing();
-        return readyForProcessing
+    public void markAsSent(UUID requestId) {
+        portfolioOutboxJpaRepository.markAsSent(requestId);
+    }
+
+    @Override
+    public void marAsCreated(UUID requestId) {
+        portfolioOutboxJpaRepository.markAsCreated(requestId);
+    }
+
+    @Override
+    public Set<PortfolioOutbox> findNotSendToKafka() {
+        Set<PortfolioOutboxEntity> readyToBeSend = portfolioOutboxJpaRepository.findReadyForProcessing();
+        return readyToBeSend
                 .stream()
                 .map(x -> new PortfolioOutbox(x.getId(), x.getAssets()))
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public void addTrackedCompanies(Set<Ticker> tickers) {
-        String sql = "INSERT INTO tracked_companies (id, ticker) VALUES (?, ?) ON CONFLICT (ticker) DO NOTHING";
-        jdbcTemplate.batchUpdate(sql, tickers, tickers.size(),
-                (ps, ticker) -> {
-                    ps.setObject(1, UUID.randomUUID());
-                    ps.setString(2, ticker.name());
-                }
-        );
+    public Set<PortfolioOutbox> findSentToKafka() {
+        Set<PortfolioOutboxEntity> sent = portfolioOutboxJpaRepository.findSent();
+        return sent.stream()
+                .map(x -> new PortfolioOutbox(x.getId(), x.getAssets()))
+                .collect(Collectors.toSet());
     }
-
 }

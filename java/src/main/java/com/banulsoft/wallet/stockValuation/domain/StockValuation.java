@@ -24,4 +24,9 @@ public class StockValuation {
     public String currencyName() {
         return price.currency().name();
     }
+
+    public StockValuation(Ticker ticker, Price price) {
+        this.ticker = ticker;
+        this.price = price;
+    }
 }

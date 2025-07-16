@@ -13,6 +13,6 @@ class AssetDetailsDataFetcher {
 
     private void aaa() {
         // todo -> continue on this one
-        List<String> strings = jdbcTemplate.queryForList("select * from tracked_companies ad", String.class);
+        List<String> strings = jdbcTemplate.queryForList("select * from searched_companies ad", String.class);
     }
 }

@@ -9,18 +9,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-class OutboxScheduler {
+class OutboxKafkaSenderScheduler {
     private final PersistancePort persistancePort;
     private final MessagingPort messagingPort;
 
-    public OutboxScheduler(PersistancePort persistancePort, MessagingPort messagingPort) {
+    public OutboxKafkaSenderScheduler(PersistancePort persistancePort, MessagingPort messagingPort) {
         this.persistancePort = persistancePort;
         this.messagingPort = messagingPort;
     }
 
     @Scheduled(fixedRate = 10000)
     public void sendToKafka() {
-        Set<PortfolioOutbox> readyForProcessing = persistancePort.findReadyForProcessing();
+        Set<PortfolioOutbox> readyForProcessing = persistancePort.findNotSendToKafka();
         readyForProcessing.forEach(entry -> {
             Set<Ticker> tickers = entry.getRequests().stream().map(AssetsCreationRequest::ticker)
                     .collect(Collectors.toSet())
@@ -29,7 +29,9 @@ class OutboxScheduler {
                     .collect(Collectors.toSet());
 
             PortfolioCreationRequestedEvent event = new PortfolioCreationRequestedEvent(entry.getId(), tickers);
+
             messagingPort.sendPortfolioRequest(event);
+            messagingPort.markAsSent(event);
         });
     }
 }
