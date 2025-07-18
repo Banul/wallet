@@ -1,9 +1,10 @@
-package com.banulsoft.wallet.stockValuation.domain;
+package com.banulsoft.wallet.stockvaluation.domain;
 
 /*
     Tracking current price of tickers our users are interested in
  */
 
+import com.banulsoft.wallet.shared.Ticker;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -14,7 +15,7 @@ public class StockValuation {
     private Price price;
 
     public String tickerName() {
-        return ticker.ticker();
+        return ticker.name();
     }
 
     public BigDecimal price() {

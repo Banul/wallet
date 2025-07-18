@@ -2,6 +2,7 @@ package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
 import com.banulsoft.wallet.portfoliooutbox.domain.MessagingPort;
 import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -29,6 +30,7 @@ class PortfolioOutboxMessagingAdapter implements MessagingPort {
     }
 
     @Override
+    @Transactional
     public void sendPortfolioRequest(PortfolioCreationRequestedEvent portfolioCreationRequestedEvent) {
         CompletableFuture<SendResult<String, PortfolioCreationRequestedEvent>> completableFuture = kafkaTemplate.send(topic, portfolioCreationRequestedEvent);
         completableFuture.whenComplete((result, ex) -> {
@@ -43,6 +45,7 @@ class PortfolioOutboxMessagingAdapter implements MessagingPort {
     }
 
     @Override
+    @Transactional
     public void markAsSent(PortfolioCreationRequestedEvent portfolioCreationRequestedEvent) {
         persistancePort.markAsSent(portfolioCreationRequestedEvent.requestId());
     }

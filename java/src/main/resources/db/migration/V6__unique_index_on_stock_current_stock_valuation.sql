@@ -1,0 +1,1 @@
+create unique index stock_valuation_current_unique_idx on stock_valuation_current (ticker);

@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.stockValuation.domain;
+package com.banulsoft.wallet.stockvaluation.domain;
 
 import java.math.BigDecimal;
 

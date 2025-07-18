@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.stockValuation.domain;
+package com.banulsoft.wallet.stockvaluation.domain;
 
 public enum Currency {
     PLN,

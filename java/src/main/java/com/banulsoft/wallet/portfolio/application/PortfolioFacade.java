@@ -1,0 +1,18 @@
+package com.banulsoft.wallet.portfolio.application;
+
+import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsException;
+import com.banulsoft.wallet.portfolio.domain.Portfolio;
+import com.banulsoft.wallet.portfolio.domain.PortfolioPersistancePort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class PortfolioFacade {
+    private final PortfolioPersistancePort portfolioPersistancePort;
+    public Portfolio findById(UUID portfolioId) {
+       return portfolioPersistancePort.findById(portfolioId).orElseThrow(PortfolioNotExistsException::new);
+    }
+}

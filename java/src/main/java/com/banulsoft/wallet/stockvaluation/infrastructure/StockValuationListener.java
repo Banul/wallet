@@ -1,7 +1,8 @@
-package com.banulsoft.wallet.stockValuation.infrastructure;
+package com.banulsoft.wallet.stockvaluation.infrastructure;
 
+import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.shared.kafka.StockValuationResponse;
-import com.banulsoft.wallet.stockValuation.domain.*;
+import com.banulsoft.wallet.stockvaluation.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;

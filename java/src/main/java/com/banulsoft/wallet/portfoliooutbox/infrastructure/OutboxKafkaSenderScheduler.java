@@ -2,6 +2,7 @@ package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
 import com.banulsoft.wallet.portfoliooutbox.domain.*;
 import com.banulsoft.wallet.shared.Ticker;
+import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ class OutboxKafkaSenderScheduler {
     }
 
     @Scheduled(fixedRate = 10000)
+    @Transactional
     public void sendToKafka() {
         Set<PortfolioOutbox> readyForProcessing = persistancePort.findNotSendToKafka();
         readyForProcessing.forEach(entry -> {

@@ -5,6 +5,9 @@ import com.banulsoft.wallet.portfolio.domain.PortfolioPersistancePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 class PortfolioPersistanceAdapter implements PortfolioPersistancePort {
@@ -15,5 +18,11 @@ class PortfolioPersistanceAdapter implements PortfolioPersistancePort {
         PortfolioEntity portfolioEntity = new PortfolioEntity();
         portfolioEntity.setPositions(portfolio.getPositions());
         portfolioJpaRepository.save(portfolioEntity);
+    }
+
+    @Override
+    public Optional<Portfolio> findById(UUID portfolioId) {
+        return portfolioJpaRepository.findById(portfolioId)
+                .map(x -> new Portfolio(x.getPositions()));
     }
 }
