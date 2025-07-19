@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class PortfolioValueFacade {
     private final BigDecimal USD_VAL = BigDecimal.valueOf(3.65);
     private final BigDecimal EUR_VAL = BigDecimal.valueOf(4.25);
+    private final BigDecimal DKK_VAL = BigDecimal.valueOf(0.57);
     private final PortfolioFacade portfolioFacade;
     private final StockValuationFacade stockValuationFacade;
 
@@ -39,6 +40,7 @@ public class PortfolioValueFacade {
                 case PLN -> BigDecimal.ONE;
                 case USD -> USD_VAL;
                 case EUR -> EUR_VAL;
+                case DKK -> DKK_VAL;
                 case UNKNOWN -> throw new IllegalStateException();
             };
             return BigDecimal.valueOf(amount).multiply(multiplier).multiply(val.price());

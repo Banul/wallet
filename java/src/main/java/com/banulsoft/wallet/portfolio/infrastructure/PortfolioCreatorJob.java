@@ -26,9 +26,6 @@ public class PortfolioCreatorJob {
     @Scheduled(fixedRate = 10000)
     public void createPortfolios() {
         Set<PortfolioOutbox> validPortfolios = portfolioOutboxFacade.findValidPortfolios();
-        Set<Portfolio> portfolios = validPortfolios.stream()
-                .map(PortfolioCreatorJob::toPortfolio)
-                .collect(Collectors.toSet());
 
         validPortfolios.forEach(portfolioOutbox -> {
             Portfolio portfolio = toPortfolio(portfolioOutbox);

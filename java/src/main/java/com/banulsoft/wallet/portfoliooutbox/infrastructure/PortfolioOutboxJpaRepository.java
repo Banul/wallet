@@ -9,15 +9,15 @@ import java.util.UUID;
 
 interface PortfolioOutboxJpaRepository extends JpaRepository<PortfolioOutboxEntity, UUID> {
 
-    @Query(value = "update portfolio_request set status = 'SENT'", nativeQuery = true)
+    @Query(value = "update portfolio_request set status = 'SENT' where id = :requestId", nativeQuery = true)
     @Modifying
     void markAsSent(UUID requestId);
 
-    @Query(value = "update portfolio_request set status = 'FAILED'", nativeQuery = true)
+    @Query(value = "update portfolio_request set status = 'FAILED' where id = :requestId", nativeQuery = true)
     @Modifying
     void markAsFailure(UUID requestId);
 
-    @Query(value = "update portfolio_request set status = 'CREATED'", nativeQuery = true)
+    @Query(value = "update portfolio_request set status = 'CREATED' where id = :requestId", nativeQuery = true)
     @Modifying
     void markAsCreated(UUID requestId);
 

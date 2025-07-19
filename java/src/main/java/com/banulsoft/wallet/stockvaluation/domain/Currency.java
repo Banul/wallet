@@ -4,5 +4,6 @@ public enum Currency {
     PLN,
     USD,
     EUR,
+    DKK,
     UNKNOWN
 }
