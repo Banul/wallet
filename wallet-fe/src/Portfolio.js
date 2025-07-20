@@ -9,7 +9,6 @@ function Portfolio() {
   const [ticker, setTicker] = useState('');
   const [amount, setAmount] = useState('');
   const [stocks, setStocks] = useState([]);
-  // hooki na górze komponentu!
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState('');
 

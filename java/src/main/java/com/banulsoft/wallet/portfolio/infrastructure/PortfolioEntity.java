@@ -18,6 +18,9 @@ class PortfolioEntity extends BaseEntity {
     @Column(name = "positions")
     private Set<Position> positions;
 
+    @Column(name = "name")
+    private String name;
+
     public Set<Position> getPositions() {
         return positions;
     }

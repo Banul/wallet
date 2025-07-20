@@ -20,6 +20,9 @@ class PortfolioOutboxEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "name")
+    private String name;
+
     protected PortfolioOutboxEntity() {}
 
     public PortfolioOutboxEntity(Set<AssetsCreationRequest> assetsCreationRequests) {

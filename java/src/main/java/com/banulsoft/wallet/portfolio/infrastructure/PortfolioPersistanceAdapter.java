@@ -5,6 +5,7 @@ import com.banulsoft.wallet.portfolio.domain.PortfolioPersistancePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,5 +25,11 @@ class PortfolioPersistanceAdapter implements PortfolioPersistancePort {
     public Optional<Portfolio> findById(UUID portfolioId) {
         return portfolioJpaRepository.findById(portfolioId)
                 .map(x -> new Portfolio(x.getPositions()));
+    }
+
+    @Override
+    public List<Portfolio> findAll() {
+        return portfolioJpaRepository.findAll()
+                .stream().map(x -> new Portfolio(x.getPositions())).toList();
     }
 }

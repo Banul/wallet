@@ -6,6 +6,7 @@ import com.banulsoft.wallet.portfolio.domain.PortfolioPersistancePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -14,5 +15,9 @@ public class PortfolioFacade {
     private final PortfolioPersistancePort portfolioPersistancePort;
     public Portfolio findById(UUID portfolioId) {
        return portfolioPersistancePort.findById(portfolioId).orElseThrow(PortfolioNotExistsException::new);
+    }
+
+    public List<Portfolio> findAll() {
+        return portfolioPersistancePort.findAll();
     }
 }
