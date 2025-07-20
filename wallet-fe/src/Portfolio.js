@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 
 function Portfolio() {
+  const [portfolioName, setPortfolioName] = useState('');
   const [ticker, setTicker] = useState('');
   const [amount, setAmount] = useState('');
   const [stocks, setStocks] = useState([]);
@@ -30,10 +31,15 @@ function Portfolio() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ assets: stocks }),
+        body: JSON.stringify({ 
+          name: portfolioName,
+          assets: stocks
+        }),
       });
       if (res.ok) {
         setResponseMsg('Portfel został utworzony!');
+        setPortfolioName('');
+        setStocks([]);
       } else {
         setResponseMsg('Błąd podczas tworzenia portfela.');
       }
@@ -49,6 +55,17 @@ function Portfolio() {
       <Typography variant="h4" align="center" gutterBottom color="primary">
         Your Portfolio
       </Typography>
+      {/* Pole na nazwę portfela */}
+      <TextField
+        label="Nazwa portfela"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={portfolioName}
+        required
+        onChange={(e) => setPortfolioName(e.target.value)}
+        sx={{ mb: 2 }}
+      />
       <form onSubmit={handleSubmit}>
         <TextField
           label="Ticker"
@@ -104,14 +121,18 @@ function Portfolio() {
           </Table>
         </TableContainer>
       )}
-      {/* Tu dodajemy przycisk i komunikat */}
+      {/* Guzik Create Portfolio wymaga nazwy portfela i choć jednej akcji */}
       <Button
         variant="contained"
         color="secondary"
         fullWidth
         sx={{ mt: 2 }}
         onClick={handleCreatePortfolio}
-        disabled={stocks.length === 0 || loading}
+        disabled={
+          stocks.length === 0 ||
+          loading ||
+          !portfolioName.trim()
+        }
       >
         {loading ? 'Tworzenie...' : 'Create Portfolio'}
       </Button>

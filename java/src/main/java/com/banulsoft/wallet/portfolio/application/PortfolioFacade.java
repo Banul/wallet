@@ -3,9 +3,13 @@ package com.banulsoft.wallet.portfolio.application;
 import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsException;
 import com.banulsoft.wallet.portfolio.domain.Portfolio;
 import com.banulsoft.wallet.portfolio.domain.PortfolioPersistancePort;
+import com.banulsoft.wallet.portfoliovalue.application.PortfolioValueFacade;
+import com.banulsoft.wallet.portfoliovalue.domain.PortfolioValue;
+import com.banulsoft.wallet.stockvaluation.domain.Currency;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

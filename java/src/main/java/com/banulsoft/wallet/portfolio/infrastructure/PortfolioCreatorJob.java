@@ -46,6 +46,6 @@ public class PortfolioCreatorJob {
                 .map(x -> new Position(new Ticker(x.ticker()), x.amount()))
                 .collect(Collectors.toSet());
 
-        return new Portfolio(positions);
+        return new Portfolio(positions, validPortfolio.getName());
     }
 }

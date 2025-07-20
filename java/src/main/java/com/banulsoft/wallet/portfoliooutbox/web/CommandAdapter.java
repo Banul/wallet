@@ -8,6 +8,6 @@ import java.util.List;
 public class CommandAdapter {
     static PortfolioCreateCommand createCommand(PortfolioCreateDto dto) {
         List<AssetCreateCommand> assetCreateCommands = dto.assets().stream().map(asset -> new AssetCreateCommand(asset.ticker(), asset.amount())).toList();
-        return new PortfolioCreateCommand(assetCreateCommands);
+        return new PortfolioCreateCommand(assetCreateCommands, dto.name());
     }
 }

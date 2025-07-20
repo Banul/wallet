@@ -18,18 +18,19 @@ class PortfolioPersistanceAdapter implements PortfolioPersistancePort {
     public void save(Portfolio portfolio) {
         PortfolioEntity portfolioEntity = new PortfolioEntity();
         portfolioEntity.setPositions(portfolio.getPositions());
+        portfolioEntity.setName(portfolio.getName());
         portfolioJpaRepository.save(portfolioEntity);
     }
 
     @Override
     public Optional<Portfolio> findById(UUID portfolioId) {
         return portfolioJpaRepository.findById(portfolioId)
-                .map(x -> new Portfolio(x.getPositions()));
+                .map(x -> new Portfolio(x.getPositions(), x.getName()));
     }
 
     @Override
     public List<Portfolio> findAll() {
         return portfolioJpaRepository.findAll()
-                .stream().map(x -> new Portfolio(x.getPositions())).toList();
+                .stream().map(x -> new Portfolio(x.getId(), x.getPositions(), x.getName())).toList();
     }
 }

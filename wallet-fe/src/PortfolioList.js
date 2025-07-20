@@ -1,29 +1,58 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Paper,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CircularProgress,
+  Alert,
+  Stack
+} from "@mui/material";
 
+// PortfolioDetails w MUI
 const PortfolioDetails = ({ portfolio, onBack }) => (
-  <div>
-    <button onClick={onBack}>← Powrót do portfeli</button>
-    <h2>{portfolio.name}</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Spółka</th>
-          <th>Liczba akcji</th>
-          <th>Cena bieżąca</th>
-        </tr>
-      </thead>
-      <tbody>
-        {portfolio.details.map((item, idx) => (
-          <tr key={idx}>
-            <td>{item.symbol}</td>
-            <td>{item.shares}</td>
-            <td>{item.price}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+  <Box
+    component={Paper}
+    sx={{
+      mt: 5,
+      p: 4,
+      maxWidth: 800,
+      mx: "auto"
+    }}
+    elevation={3}
+  >
+    <Button variant="outlined" onClick={onBack} sx={{ mb: 3 }}>
+      ← Powrót do portfeli
+    </Button>
+    <Typography variant="h4" gutterBottom>{portfolio.name}</Typography>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell><b>Spółka</b></TableCell>
+            <TableCell><b>Liczba akcji</b></TableCell>
+            <TableCell><b>Cena bieżąca</b></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {portfolio.details.map((item, idx) => (
+            <TableRow key={idx}>
+              <TableCell>{item.symbol}</TableCell>
+              <TableCell>{item.shares}</TableCell>
+              <TableCell>{item.price}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </Box>
 );
 
 const PortfolioList = () => {
@@ -31,7 +60,6 @@ const PortfolioList = () => {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,12 +76,23 @@ const PortfolioList = () => {
       }
       setLoading(false);
     };
-
     fetchPortfolios();
   }, []);
 
-  if (loading) return <div>Ładowanie portfeli...</div>;
-  if (error) return <div>Błąd: {error}</div>;
+  if (loading) {
+    return (
+      <Stack alignItems="center" mt={8}>
+        <CircularProgress />
+        <Typography sx={{ mt: 2 }}>Ładowanie portfeli...</Typography>
+      </Stack>
+    );
+  }
+  if (error)
+    return (
+      <Box maxWidth={600} mx="auto" mt={6}>
+        <Alert severity="error">Błąd: {error}</Alert>
+      </Box>
+    );
 
   if (selected !== null) {
     const portfolio = portfolios[selected];
@@ -66,52 +105,62 @@ const PortfolioList = () => {
   }
 
   return (
-    <div>
-      <button
-        style={{
-          marginBottom: '20px',
-          padding: '10px 16px',
-          fontSize: '16px',
-          cursor: 'pointer'
-        }}
-        onClick={() => navigate('/portfolio')}
-      >
-        Dodaj nowe portfolio
-      </button>
-      <h1>Twoje portfolia</h1>
+    <Box
+      component={Paper}
+      elevation={3}
+      sx={{
+        mt: 5,
+        p: 4,
+        maxWidth: 900,
+        mx: "auto"
+      }}
+    >
+      <Stack direction="row" justifyContent="space-between" mb={2}>
+        <Typography variant="h4" sx={{ fontWeight: 600 }}>
+          Twoje portfolia
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate("/portfolio")}
+        >
+          Dodaj nowe portfolio
+        </Button>
+      </Stack>
       {portfolios.length === 0 ? (
-        <div>Brak portfeli do wyświetlenia.</div>
+        <Alert severity="info" sx={{ my: 2 }}>
+          Brak portfeli do wyświetlenia.
+        </Alert>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Nazwa portfela</th>
-              <th>Wartość</th>
-              <th>Wynik (%)</th>
-              <th>Liczba aktywów</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {portfolios.map((portf, idx) => (
-              <tr key={portf.id}>
-                <td>{portf.name}</td>
-                <td>{portf.value} zł</td>
-                <td style={{
-                  color: portf.percentage >= 0 ? "green" : "red"
-                }}>
-                  {portf.percentage}%
-                </td>
-                <td>{portf.itemCount}</td>
-                <td>
-                  <button onClick={() => setSelected(idx)}>Detale</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <TableContainer component={Paper} sx={{ mt: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell><b>Nazwa portfela</b></TableCell>
+                <TableCell><b>Wartość</b></TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {portfolios.map((portf, idx) => (
+                <TableRow hover key={portf.id}>
+                  <TableCell>{portf.name}</TableCell>
+                  <TableCell>{portf.value} zł</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outlined"
+                      onClick={() => setSelected(idx)}
+                    >
+                      Detale
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
-    </div>
+    </Box>
   );
 };
 

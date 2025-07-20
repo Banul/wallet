@@ -19,7 +19,7 @@ class DatabasePersistanceAdapter implements PersistancePort {
 
     @Override
     public PortfolioOutbox save(PortfolioOutbox portfolio) {
-        PortfolioOutboxEntity entity = new PortfolioOutboxEntity(portfolio.getRequests());
+        PortfolioOutboxEntity entity = new PortfolioOutboxEntity(portfolio);
         portfolioOutboxJpaRepository.save(entity);
         return portfolio;
     }
@@ -44,7 +44,7 @@ class DatabasePersistanceAdapter implements PersistancePort {
         Set<PortfolioOutboxEntity> readyToBeSend = portfolioOutboxJpaRepository.findReadyForProcessing();
         return readyToBeSend
                 .stream()
-                .map(x -> new PortfolioOutbox(x.getId(), x.getAssets()))
+                .map(x -> new PortfolioOutbox(x.getId(), x.getName(), x.getAssets()))
                 .collect(Collectors.toSet());
     }
 
@@ -52,7 +52,7 @@ class DatabasePersistanceAdapter implements PersistancePort {
     public Set<PortfolioOutbox> findSentToKafka() {
         Set<PortfolioOutboxEntity> sent = portfolioOutboxJpaRepository.findSent();
         return sent.stream()
-                .map(x -> new PortfolioOutbox(x.getId(), x.getAssets()))
+                .map(x -> new PortfolioOutbox(x.getId(), x.getName(), x.getAssets()))
                 .collect(Collectors.toSet());
     }
 }

@@ -1,6 +1,8 @@
 package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
+import com.banulsoft.wallet.portfolio.domain.Portfolio;
 import com.banulsoft.wallet.portfoliooutbox.domain.AssetsCreationRequest;
+import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import com.banulsoft.wallet.shared.BaseEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -25,8 +27,9 @@ class PortfolioOutboxEntity extends BaseEntity {
 
     protected PortfolioOutboxEntity() {}
 
-    public PortfolioOutboxEntity(Set<AssetsCreationRequest> assetsCreationRequests) {
-        this.assetsCreationRequests = assetsCreationRequests;
+    public PortfolioOutboxEntity(PortfolioOutbox portfolioOutbox) {
+        this.assetsCreationRequests = portfolioOutbox.getAssetsCreationRequests();
+        this.name = portfolioOutbox.getName();
         this.status = Status.UNPROCESSED;
     }
 
@@ -40,5 +43,9 @@ class PortfolioOutboxEntity extends BaseEntity {
 
     public Status getStatus() {
         return status;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

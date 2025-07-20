@@ -1,19 +1,19 @@
 package com.banulsoft.wallet.portfoliovalue.application;
 
+import com.banulsoft.wallet.portfolio.application.PortfolioBaseInformation;
 import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
 import com.banulsoft.wallet.portfolio.domain.Portfolio;
 import com.banulsoft.wallet.portfoliovalue.domain.PortfolioValue;
 import com.banulsoft.wallet.position.Position;
 import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.stockvaluation.application.StockValuationFacade;
+import com.banulsoft.wallet.stockvaluation.domain.Currency;
 import com.banulsoft.wallet.stockvaluation.domain.StockValuation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,5 +47,16 @@ public class PortfolioValueFacade {
         }).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return new PortfolioValue(priceInPln);
+    }
+
+    public List<PortfolioBaseInformation> getBaseInformation() {
+        List<PortfolioBaseInformation> portfolioBaseInformation = new ArrayList<>();
+        List<Portfolio> portfolios = portfolioFacade.findAll();
+        for (Portfolio portfolio : portfolios) {
+            PortfolioValue portfolioValue = calculate(portfolio.getId());
+            portfolioBaseInformation.add(new PortfolioBaseInformation(portfolio.getId(), portfolio.getName(), portfolioValue.getPrice(), Currency.PLN));
+        }
+
+        return portfolioBaseInformation;
     }
 }

@@ -29,7 +29,9 @@ public class PortfolioOutboxFacade {
         Set<PortfolioOutbox> validPortfolios = new HashSet<>();
         Set<PortfolioOutbox> readyForProcessing = persistancePort.findSentToKafka();
         readyForProcessing.forEach(portfolioOutbox -> {
-            Set<String> requestedTickers = portfolioOutbox.getRequests().stream().map(AssetsCreationRequest::ticker).collect(Collectors.toSet());
+            Set<String> requestedTickers = portfolioOutbox.getRequests().stream()
+                    .map(AssetsCreationRequest::ticker)
+                    .collect(Collectors.toSet());
             if (existingCompaniesFacade.allNamesExist(requestedTickers)) {
                 validPortfolios.add(portfolioOutbox);
             }

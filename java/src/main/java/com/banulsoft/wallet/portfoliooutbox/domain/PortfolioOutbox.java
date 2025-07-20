@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Getter
 public class PortfolioOutbox {
+    private String name;
     private UUID id;
     private final Set<AssetsCreationRequest> assetsCreationRequests;
 
@@ -23,15 +24,16 @@ public class PortfolioOutbox {
     }
 
     public PortfolioOutbox(PortfolioCreateCommand command) {
-        this.assetsCreationRequests = command.assets().stream().map(x -> new AssetsCreationRequest(x.ticker(), x.amount())).collect(Collectors.toSet());
+        this.assetsCreationRequests = command.assets().stream()
+                .map(x -> new AssetsCreationRequest(x.ticker(), x.amount()))
+                .collect(Collectors.toSet());
+        this.name = command.name();
     }
 
-    public PortfolioOutbox(Set<AssetsCreationRequest> assetsCreationRequests) {
-        this.assetsCreationRequests = assetsCreationRequests;
-    }
 
-    public PortfolioOutbox(UUID id, Set<AssetsCreationRequest> assetsCreationRequests) {
+    public PortfolioOutbox(UUID id, String name, Set<AssetsCreationRequest> assetsCreationRequests) {
         this.id = id;
+        this.name = name;
         this.assetsCreationRequests = assetsCreationRequests;
     }
 

@@ -28,4 +28,12 @@ class PortfolioEntity extends BaseEntity {
     public void setPositions(Set<Position> positions) {
         this.positions = positions;
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

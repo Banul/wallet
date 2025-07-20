@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.portfolio.configuration;
+package com.banulsoft.wallet.configuration;
 
 import com.banulsoft.wallet.shared.kafka.PositionCreationResponse;
 import com.banulsoft.wallet.shared.kafka.StockValuationResponse;
@@ -18,7 +18,6 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConfig {
-
     @Bean
     public ConsumerFactory<String, PositionCreationResponse> positionCreationResponseConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
