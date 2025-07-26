@@ -1,10 +1,10 @@
 package com.banulsoft.wallet.portfolio.infrastructure;
 
+import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
 import com.banulsoft.wallet.portfolio.domain.Portfolio;
-import com.banulsoft.wallet.portfolio.domain.PortfolioPersistancePort;
 import com.banulsoft.wallet.portfoliooutbox.application.PortfolioOutboxFacade;
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
-import com.banulsoft.wallet.position.Position;
+import com.banulsoft.wallet.portfolio.domain.Position;
 import com.banulsoft.wallet.shared.Ticker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class PortfolioCreatorJob {
+class PortfolioCreatorJob {
     private final PortfolioOutboxFacade portfolioOutboxFacade;
     private final TransactionTemplate transactionTemplate;
-    private final PortfolioPersistancePort portfolioPersistancePort;
+    private final PortfolioFacade portfolioFacade;
 
     @Scheduled(fixedRate = 10000)
     public void createPortfolios() {
@@ -31,7 +31,7 @@ public class PortfolioCreatorJob {
             Portfolio portfolio = toPortfolio(portfolioOutbox);
             try {
                 transactionTemplate.executeWithoutResult(status -> {
-                    portfolioPersistancePort.save(portfolio);
+                    portfolioFacade.create(portfolio);
                     portfolioOutboxFacade.markAsCreated(portfolioOutbox.getId());
                 });
             } catch (Exception e) {

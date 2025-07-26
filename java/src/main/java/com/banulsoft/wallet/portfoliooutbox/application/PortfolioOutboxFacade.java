@@ -1,6 +1,5 @@
 package com.banulsoft.wallet.portfoliooutbox.application;
 
-import com.banulsoft.wallet.existingcompanies.ExistingCompaniesFacade;
 import com.banulsoft.wallet.portfoliooutbox.domain.AssetsCreationRequest;
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
@@ -12,11 +11,11 @@ import java.util.stream.Collectors;
 @Service
 public class PortfolioOutboxFacade {
     private final PersistancePort persistancePort;
-    private final ExistingCompaniesFacade existingCompaniesFacade;
+    private final ExistingCompaniesService existingCompaniesService;
 
-    public PortfolioOutboxFacade(PersistancePort persistancePort, ExistingCompaniesFacade existingCompaniesFacade) {
+    public PortfolioOutboxFacade(PersistancePort persistancePort, ExistingCompaniesService existingCompaniesService) {
         this.persistancePort = persistancePort;
-        this.existingCompaniesFacade = existingCompaniesFacade;
+        this.existingCompaniesService = existingCompaniesService;
     }
 
     public PortfolioOutbox create(PortfolioCreateCommand portfolioCreateCommand) {
@@ -32,7 +31,7 @@ public class PortfolioOutboxFacade {
             Set<String> requestedTickers = portfolioOutbox.getRequests().stream()
                     .map(AssetsCreationRequest::ticker)
                     .collect(Collectors.toSet());
-            if (existingCompaniesFacade.allNamesExist(requestedTickers)) {
+            if (existingCompaniesService.allNamesExist(requestedTickers)) {
                 validPortfolios.add(portfolioOutbox);
             }
         });

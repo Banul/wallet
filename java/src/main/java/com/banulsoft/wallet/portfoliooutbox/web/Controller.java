@@ -3,8 +3,6 @@ package com.banulsoft.wallet.portfoliooutbox.web;
 import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
 import com.banulsoft.wallet.portfoliooutbox.application.PortfolioCreateCommand;
 import com.banulsoft.wallet.portfoliooutbox.application.PortfolioOutboxFacade;
-import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
-import com.banulsoft.wallet.portfoliovalue.application.PortfolioValueFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +15,6 @@ import java.util.stream.Collectors;
 class Controller {
     private final PortfolioOutboxFacade portfolioOutboxFacade;
     private final PortfolioFacade portfolioFacade;
-    private final PortfolioValueFacade portfolioValueFacade;
-
 
     @PostMapping
     void create(@RequestBody PortfolioCreateDto portfolioCreateDto) {
@@ -28,7 +24,7 @@ class Controller {
 
     @GetMapping(path = "/all")
     Set<PortfolioResponseDto> getAll() {
-        return portfolioValueFacade.getBaseInformation()
+        return portfolioFacade.getBaseInformation()
                 .stream()
                 .map(x -> new PortfolioResponseDto(x.getName(), x.getValue()))
                 .collect(Collectors.toSet());

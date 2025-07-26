@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.existingcompanies;
+package com.banulsoft.wallet.portfoliooutbox.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class ExistingCompaniesFacade {
+class ExistingCompaniesService {
     private final JdbcTemplate jdbcTemplate;
     public boolean allNamesExist(Set<String> names) {
         if (names == null || names.isEmpty()) {

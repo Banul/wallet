@@ -1,9 +1,7 @@
 package com.banulsoft.wallet.portfolio.domain;
 
-import com.banulsoft.wallet.position.Position;
 import lombok.Getter;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 

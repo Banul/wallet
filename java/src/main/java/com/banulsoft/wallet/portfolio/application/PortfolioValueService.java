@@ -1,10 +1,8 @@
-package com.banulsoft.wallet.portfoliovalue.application;
+package com.banulsoft.wallet.portfolio.application;
 
-import com.banulsoft.wallet.portfolio.application.PortfolioBaseInformation;
-import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
 import com.banulsoft.wallet.portfolio.domain.Portfolio;
-import com.banulsoft.wallet.portfoliovalue.domain.PortfolioValue;
-import com.banulsoft.wallet.position.Position;
+import com.banulsoft.wallet.portfolio.domain.PortfolioValue;
+import com.banulsoft.wallet.portfolio.domain.Position;
 import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.stockvaluation.application.StockValuationFacade;
 import com.banulsoft.wallet.stockvaluation.domain.Currency;
@@ -18,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PortfolioValueFacade {
+class PortfolioValueService {
     private final BigDecimal USD_VAL = BigDecimal.valueOf(3.65);
     private final BigDecimal EUR_VAL = BigDecimal.valueOf(4.25);
     private final BigDecimal DKK_VAL = BigDecimal.valueOf(0.57);
@@ -30,7 +28,7 @@ public class PortfolioValueFacade {
         Portfolio portfolio = portfolioFacade.findById(portfolioId);
         Set<Position> positions = portfolio.getPositions();
         Set<Ticker> tickers = positions.stream().map(Position::getTicker).collect(Collectors.toSet());
-        Set<StockValuation> stockValuations = stockValuationFacade.findByTickers(tickers);
+        Set<StockValuation> stockValuations = stockValuationFacade.calculateForTickers(tickers);
         Map<Ticker, Double> amountPerTicker = positions.stream()
                 .collect(Collectors.toMap(Position::getTicker, Position::getAmount));
 

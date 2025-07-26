@@ -1,9 +1,9 @@
-package com.banulsoft.wallet.portfoliovalue.domain;
+package com.banulsoft.wallet.portfolio.domain;
 
 import java.math.BigDecimal;
 
 public class PortfolioValue {
-    private BigDecimal price;
+    private final BigDecimal price;
 
     public PortfolioValue(BigDecimal price) {
         this.price = price;

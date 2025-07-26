@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.position;
+package com.banulsoft.wallet.portfolio.domain;
 
 import com.banulsoft.wallet.shared.Ticker;
 

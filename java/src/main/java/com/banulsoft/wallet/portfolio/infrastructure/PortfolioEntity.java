@@ -1,6 +1,6 @@
 package com.banulsoft.wallet.portfolio.infrastructure;
 
-import com.banulsoft.wallet.position.Position;
+import com.banulsoft.wallet.portfolio.domain.Position;
 import com.banulsoft.wallet.shared.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
