@@ -1,6 +1,6 @@
 package com.banulsoft.wallet.configuration;
 
-import com.banulsoft.wallet.shared.kafka.PositionCreationResponse;
+import com.banulsoft.wallet.shared.kafka.TickerDetailsResponse;
 import com.banulsoft.wallet.shared.kafka.StockValuationResponse;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -19,7 +19,7 @@ import java.util.Map;
 @EnableKafka
 public class KafkaConfig {
     @Bean
-    public ConsumerFactory<String, PositionCreationResponse> positionCreationResponseConsumerFactory() {
+    public ConsumerFactory<String, TickerDetailsResponse> positionCreationResponseConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -28,7 +28,7 @@ public class KafkaConfig {
         return new DefaultKafkaConsumerFactory<>(
                 props,
                 new StringDeserializer(),
-                new JsonDeserializer<>(PositionCreationResponse.class)
+                new JsonDeserializer<>(TickerDetailsResponse.class)
         );
     }
 
@@ -48,8 +48,8 @@ public class KafkaConfig {
 
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, PositionCreationResponse> kafkaListenerContainerFactoryPortfolioCreationResponse() {
-        ConcurrentKafkaListenerContainerFactory<String, PositionCreationResponse> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, TickerDetailsResponse> kafkaListenerContainerFactoryPortfolioCreationResponse() {
+        ConcurrentKafkaListenerContainerFactory<String, TickerDetailsResponse> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(positionCreationResponseConsumerFactory());
         factory.setConcurrency(3);

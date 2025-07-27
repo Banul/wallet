@@ -4,3 +4,6 @@ from dataclasses import dataclass, asdict
 class StockTrackingStatus:
     ticker: str
     status: str
+    country: str
+    industry: str
+    sector: str

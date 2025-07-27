@@ -1,0 +1,2 @@
+class TickerNotExistsException(Exception):
+    pass

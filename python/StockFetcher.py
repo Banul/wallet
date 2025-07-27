@@ -1,6 +1,10 @@
 from StockValuation import StockValuation
 import yfinance as yf
 
+from TickerDetails import TickerDetails
+from exception import TickerNotExistsException
+
+
 class StockFetcher:
     def fetch_stock_information(self, ticker: str) -> StockValuation:
         stock = yf.Ticker(ticker)
@@ -11,9 +15,17 @@ class StockFetcher:
         hist = stock.history(period="1d")
         return StockValuation(ticker, current_price, currency)
 
-    def ticker_exists(self, ticker: str):
+    def fetch_ticker_details(self, ticker: str):
         try:
             data = yf.Ticker(ticker).history(period='7d', interval='1d')
-            return not data.empty
+            exists = not data.empty
+            if not exists:
+                raise TickerNotExistsException
+
+            info = yf.Ticker(ticker).info
+            country = info.get('country')
+            industry = info.get('industry')
+            sector = info.get('sector')
+            return TickerDetails(ticker, country, industry, sector)
         except Exception:
             return False

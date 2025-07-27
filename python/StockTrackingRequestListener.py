@@ -11,6 +11,8 @@ from StockFetcher import StockFetcher
 from StockTrackingResponseSender import *
 from confluent_kafka import Consumer, KafkaError
 
+from exception.TickerNotExistsException import TickerNotExistsException
+
 conf = {
     'bootstrap.servers': 'localhost:29092',
     'group.id': 'my_consumer_group',
@@ -43,23 +45,13 @@ try:
                 for asset in assets:
                     tickers.append(asset['name'])
 
-                not_existing = []
-                existing = []
-
                 for ticker in tickers:
-                    if stockFetcher.ticker_exists(ticker):
-                        existing.append(ticker)
-                    else:
-                        not_existing.append(ticker)
+                    try:
+                        details = stockFetcher.fetch_ticker_details(ticker)
+                        StockTrackingResponseSender.send_ticker_details(StockTrackingStatus.StockTrackingStatus(ticker, 'OK', details.country, details.industry, details.sector))
 
-                for ticker in not_existing:
-                    StockTrackingResponseSender.send_tracking_status(StockTrackingStatus.StockTrackingStatus(ticker, 'NOT EXISTS'))
-
-                for ticker in existing:
-                    StockTrackingResponseSender.send_tracking_status(StockTrackingStatus.StockTrackingStatus(ticker, 'OK'))
-
-                if len(not_existing) > 0:
-                    continue
+                    except TickerNotExistsException:
+                        StockTrackingResponseSender.send_ticker_details(StockTrackingStatus.StockTrackingStatus(ticker, 'NOT EXISTS'))
 
                 ## todo - what if saving here failed
                 CompaniesTracker.save_tracked(tickers)

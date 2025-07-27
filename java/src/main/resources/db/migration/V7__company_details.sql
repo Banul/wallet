@@ -1,8 +1,8 @@
-create table if not exists stock_details (
+create table if not exists company_details (
     id UUID primary key,
     ticker varchar,
     country varchar,
-
-    assets_creation_requests jsonb,
+    industry varchar,
+    sector varchar,
     created_date timestamptz
 );

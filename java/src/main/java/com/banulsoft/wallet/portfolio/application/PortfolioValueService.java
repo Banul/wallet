@@ -1,12 +1,15 @@
 package com.banulsoft.wallet.portfolio.application;
 
+import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsException;
 import com.banulsoft.wallet.portfolio.domain.Portfolio;
+import com.banulsoft.wallet.portfolio.domain.PortfolioPersistancePort;
 import com.banulsoft.wallet.portfolio.domain.PortfolioValue;
 import com.banulsoft.wallet.portfolio.domain.Position;
 import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.stockvaluation.application.StockValuationFacade;
 import com.banulsoft.wallet.stockvaluation.domain.Currency;
 import com.banulsoft.wallet.stockvaluation.domain.StockValuation;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +23,12 @@ class PortfolioValueService {
     private final BigDecimal USD_VAL = BigDecimal.valueOf(3.65);
     private final BigDecimal EUR_VAL = BigDecimal.valueOf(4.25);
     private final BigDecimal DKK_VAL = BigDecimal.valueOf(0.57);
-    private final PortfolioFacade portfolioFacade;
+    private final PortfolioPersistancePort portfolioPersistancePort;
     private final StockValuationFacade stockValuationFacade;
 
     // todo - for now just in pln, enable more currencies
     public PortfolioValue calculate(UUID portfolioId) {
-        Portfolio portfolio = portfolioFacade.findById(portfolioId);
+        Portfolio portfolio = portfolioPersistancePort.findById(portfolioId).orElseThrow(PortfolioNotExistsException::new);
         Set<Position> positions = portfolio.getPositions();
         Set<Ticker> tickers = positions.stream().map(Position::getTicker).collect(Collectors.toSet());
         Set<StockValuation> stockValuations = stockValuationFacade.calculateForTickers(tickers);
@@ -49,7 +52,7 @@ class PortfolioValueService {
 
     public List<PortfolioBaseInformation> getBaseInformation() {
         List<PortfolioBaseInformation> portfolioBaseInformation = new ArrayList<>();
-        List<Portfolio> portfolios = portfolioFacade.findAll();
+        List<Portfolio> portfolios = portfolioPersistancePort.findAll();
         for (Portfolio portfolio : portfolios) {
             PortfolioValue portfolioValue = calculate(portfolio.getId());
             portfolioBaseInformation.add(new PortfolioBaseInformation(portfolio.getId(), portfolio.getName(), portfolioValue.getPrice(), Currency.PLN));

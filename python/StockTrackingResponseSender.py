@@ -13,7 +13,7 @@ producer = KafkaProducer(
 
 TOPIC = 'stock_tracking_response'
 
-def send_tracking_status(status: StockTrackingStatus):
+def send_ticker_details(status: StockTrackingStatus):
     data = asdict(status)
     future = producer.send(TOPIC, value=data)
     record_meta = future.get(timeout=10)
