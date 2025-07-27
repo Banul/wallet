@@ -9,7 +9,6 @@ import jakarta.persistence.Table;
 public class StockInformationEntity extends BaseEntity {
     private String ticker;
     private String country;
-
     private String industry;
     private String sector;
 
@@ -48,11 +47,3 @@ public class StockInformationEntity extends BaseEntity {
     public StockInformationEntity() {
     }
 }
-
-
-/*
-    ticker varchar,
-    country varchar,
-    industry varchar,
-    sector varchar,
- */

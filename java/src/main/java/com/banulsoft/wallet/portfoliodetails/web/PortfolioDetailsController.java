@@ -16,7 +16,7 @@ import java.util.UUID;
 class PortfolioDetailsController {
     private final PortfolioDetailsFacade portfolioDetailsFacade;
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/{id}")
     public PortfolioDetailsDto findById(@PathVariable UUID id) {
         PortfolioDetails details = portfolioDetailsFacade.findDetails(id);
         return new PortfolioDetailsDto(details);

@@ -6,5 +6,5 @@ import java.util.Set;
 import java.util.UUID;
 
 interface StockInformationJpaRepository extends JpaRepository<StockInformationEntity, UUID> {
-    Set<StockInformationEntity> findByTicker(Set<String> ticker);
+    Set<StockInformationEntity> findByTickerIn(Set<String> ticker);
 }

@@ -26,7 +26,7 @@ class Controller {
     Set<PortfolioResponseDto> getAll() {
         return portfolioFacade.getBaseInformation()
                 .stream()
-                .map(x -> new PortfolioResponseDto(x.getName(), x.getValue()))
+                .map(x -> new PortfolioResponseDto(x.getId(), x.getName(), x.getValue()))
                 .collect(Collectors.toSet());
     }
 }

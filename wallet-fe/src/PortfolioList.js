@@ -16,49 +16,9 @@ import {
   Stack
 } from "@mui/material";
 
-// PortfolioDetails w MUI
-const PortfolioDetails = ({ portfolio, onBack }) => (
-  <Box
-    component={Paper}
-    sx={{
-      mt: 5,
-      p: 4,
-      maxWidth: 800,
-      mx: "auto"
-    }}
-    elevation={3}
-  >
-    <Button variant="outlined" onClick={onBack} sx={{ mb: 3 }}>
-      ← Powrót do portfeli
-    </Button>
-    <Typography variant="h4" gutterBottom>{portfolio.name}</Typography>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell><b>Spółka</b></TableCell>
-            <TableCell><b>Liczba akcji</b></TableCell>
-            <TableCell><b>Cena bieżąca</b></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {portfolio.details.map((item, idx) => (
-            <TableRow key={idx}>
-              <TableCell>{item.symbol}</TableCell>
-              <TableCell>{item.shares}</TableCell>
-              <TableCell>{item.price}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </Box>
-);
-
 const PortfolioList = () => {
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -87,20 +47,11 @@ const PortfolioList = () => {
       </Stack>
     );
   }
-  if (error)
+  if (error) {
     return (
       <Box maxWidth={600} mx="auto" mt={6}>
         <Alert severity="error">Błąd: {error}</Alert>
       </Box>
-    );
-
-  if (selected !== null) {
-    const portfolio = portfolios[selected];
-    return (
-      <PortfolioDetails
-        portfolio={portfolio}
-        onBack={() => setSelected(null)}
-      />
     );
   }
 
@@ -142,14 +93,14 @@ const PortfolioList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {portfolios.map((portf, idx) => (
+              {portfolios.map((portf) => (
                 <TableRow hover key={portf.id}>
                   <TableCell>{portf.name}</TableCell>
                   <TableCell>{portf.value} zł</TableCell>
                   <TableCell>
                     <Button
                       variant="outlined"
-                      onClick={() => setSelected(idx)}
+                      onClick={() => navigate(`/portfolio-details/${portf.id}`)}
                     >
                       Detale
                     </Button>

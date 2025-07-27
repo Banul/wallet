@@ -31,6 +31,7 @@ class PortfolioPersistanceAdapter implements PortfolioPersistancePort {
     @Override
     public List<Portfolio> findAll() {
         return portfolioJpaRepository.findAll()
-                .stream().map(x -> new Portfolio(x.getId(), x.getPositions(), x.getName())).toList();
+                .stream().map(x -> new Portfolio(x.getId(), x.getPositions(), x.getName()))
+                .toList();
     }
 }

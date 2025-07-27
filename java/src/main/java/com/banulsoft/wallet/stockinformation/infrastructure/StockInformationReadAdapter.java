@@ -20,12 +20,12 @@ public class StockInformationReadAdapter implements StockInformationReadPort {
                 .map(Ticker::name)
                 .collect(Collectors.toSet());
 
-        return stockInformationJpaRepository.findByTicker(tickersAsStrings)
+        return stockInformationJpaRepository.findByTickerIn(tickersAsStrings)
                 .stream()
                 .map(x -> new StockInformation(
                         new Ticker(x.getTicker()),
                         x.getSector(),
-                        x.getTicker(),
+                        x.getIndustry(),
                         x.getCountry())).collect(Collectors.toSet());
     }
 }

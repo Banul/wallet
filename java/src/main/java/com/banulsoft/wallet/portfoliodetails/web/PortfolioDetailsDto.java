@@ -14,4 +14,8 @@ class PortfolioDetailsDto {
                 x.getCountry()
         )).toList();
     }
+
+    public List<StockDetailDto> getStockDetails() {
+        return stockDetails;
+    }
 }
