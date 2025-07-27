@@ -1,9 +1,12 @@
 package com.banulsoft.wallet.portfolio.domain;
 
+import com.banulsoft.wallet.shared.Ticker;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Getter
 public class Portfolio {
@@ -24,5 +27,9 @@ public class Portfolio {
 
     public String getName() {
         return this.name;
+    }
+
+    public Set<Ticker> getTickers() {
+        return positions.stream().map(Position::getTicker).collect(Collectors.toSet());
     }
 }
