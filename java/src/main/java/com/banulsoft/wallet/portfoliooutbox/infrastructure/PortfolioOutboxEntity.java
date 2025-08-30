@@ -1,7 +1,5 @@
 package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
-import com.banulsoft.wallet.portfolio.domain.Portfolio;
-import com.banulsoft.wallet.portfoliooutbox.domain.AssetsCreationRequest;
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import com.banulsoft.wallet.shared.BaseEntity;
 import jakarta.persistence.*;
@@ -10,39 +8,46 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "portfolio_request")
 class PortfolioOutboxEntity extends BaseEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "assets_creation_requests")
-    private Set<AssetsCreationRequest> assetsCreationRequests;
+    private Set<PersistedCreationRequest> persistedCreationRequests;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private OutboxProcessingStatus outboxProcessingStatus;
 
     @Column(name = "name")
     private String name;
 
+    private UUID draftId;
+
     protected PortfolioOutboxEntity() {}
 
     public PortfolioOutboxEntity(PortfolioOutbox portfolioOutbox) {
-        this.assetsCreationRequests = portfolioOutbox.getAssetsCreationRequests();
+        this.persistedCreationRequests = portfolioOutbox.getAssetsCreationRequests()
+                .stream()
+                .map(x -> new PersistedCreationRequest(x.ticker(), x.amount()))
+                .collect(Collectors.toSet());
+
         this.name = portfolioOutbox.getName();
-        this.status = Status.UNPROCESSED;
+        this.outboxProcessingStatus = OutboxProcessingStatus.UNPROCESSED;
     }
 
     public UUID getId() {
         return super.getId();
     }
 
-    public Set<AssetsCreationRequest> getAssets() {
-        return assetsCreationRequests;
+    public Set<PersistedCreationRequest> getAssets() {
+        return persistedCreationRequests;
     }
 
-    public Status getStatus() {
-        return status;
+    public OutboxProcessingStatus getStatus() {
+        return outboxProcessingStatus;
     }
 
     public String getName() {

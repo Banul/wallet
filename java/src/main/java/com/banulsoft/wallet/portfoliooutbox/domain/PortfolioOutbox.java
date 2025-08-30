@@ -1,6 +1,8 @@
 package com.banulsoft.wallet.portfoliooutbox.domain;
 
-import com.banulsoft.wallet.portfoliooutbox.application.PortfolioCreateCommand;
+import com.banulsoft.wallet.portfolio.shared.AssetCreateCommand;
+import com.banulsoft.wallet.portfolio.shared.PortfolioCreateCommand;
+import com.banulsoft.wallet.portfoliodraft.infrastructure.PortfolioSendToQueueCommand;
 import lombok.Getter;
 
 import java.util.Set;
@@ -16,29 +18,26 @@ import java.util.stream.Collectors;
 public class PortfolioOutbox {
     private String name;
     private UUID id;
-    private final Set<AssetsCreationRequest> assetsCreationRequests;
+    private final Set<AssetCreateCommand> assetsCreationRequests;
+    private UUID draftId;
 
-    public PortfolioOutbox(UUID id, PortfolioCreateCommand command) {
-        this.id = id;
-        this.assetsCreationRequests = command.assets().stream().map(x -> new AssetsCreationRequest(x.ticker(), x.amount())).collect(Collectors.toSet());
-    }
-
-    public PortfolioOutbox(PortfolioCreateCommand command) {
+    public PortfolioOutbox(PortfolioSendToQueueCommand command) {
         this.assetsCreationRequests = command.assets().stream()
-                .map(x -> new AssetsCreationRequest(x.ticker(), x.amount()))
+                .map(x -> new AssetCreateCommand(x.ticker(), x.amount()))
                 .collect(Collectors.toSet());
         this.name = command.name();
+        this.draftId = command.draftId();
     }
 
 
-    public PortfolioOutbox(UUID id, String name, Set<AssetsCreationRequest> assetsCreationRequests) {
+    public PortfolioOutbox(UUID id, String name, Set<AssetCreateCommand> assetsCreationRequests) {
         this.id = id;
         this.name = name;
         this.assetsCreationRequests = assetsCreationRequests;
     }
 
 
-    public Set<AssetsCreationRequest> getRequests() {
+    public Set<AssetCreateCommand> getRequests() {
         return assetsCreationRequests;
     }
 

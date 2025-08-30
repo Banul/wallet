@@ -9,7 +9,6 @@ import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.stockvaluation.application.StockValuationFacade;
 import com.banulsoft.wallet.stockvaluation.domain.Currency;
 import com.banulsoft.wallet.stockvaluation.domain.StockValuation;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,6 @@
 package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
+import com.banulsoft.wallet.portfolio.shared.AssetCreateCommand;
 import com.banulsoft.wallet.portfoliooutbox.domain.*;
 import com.banulsoft.wallet.shared.Ticker;
 import jakarta.transaction.Transactional;
@@ -24,7 +25,7 @@ class OutboxKafkaSenderScheduler {
     public void sendToKafka() {
         Set<PortfolioOutbox> readyForProcessing = persistancePort.findNotSendToKafka();
         readyForProcessing.forEach(entry -> {
-            Set<Ticker> tickers = entry.getRequests().stream().map(AssetsCreationRequest::ticker)
+            Set<Ticker> tickers = entry.getRequests().stream().map(AssetCreateCommand::ticker)
                     .collect(Collectors.toSet())
                     .stream()
                     .map(Ticker::new)

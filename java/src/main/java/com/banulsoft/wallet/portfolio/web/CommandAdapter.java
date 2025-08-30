@@ -1,7 +1,7 @@
-package com.banulsoft.wallet.portfoliooutbox.web;
+package com.banulsoft.wallet.portfolio.web;
 
-import com.banulsoft.wallet.portfoliooutbox.application.AssetCreateCommand;
-import com.banulsoft.wallet.portfoliooutbox.application.PortfolioCreateCommand;
+import com.banulsoft.wallet.portfolio.shared.AssetCreateCommand;
+import com.banulsoft.wallet.portfolio.shared.PortfolioCreateCommand;
 
 import java.util.List;
 

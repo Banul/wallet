@@ -2,7 +2,8 @@ package com.banulsoft.wallet.portfolio.infrastructure;
 
 import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
 import com.banulsoft.wallet.portfolio.domain.Portfolio;
-import com.banulsoft.wallet.portfoliooutbox.application.PortfolioOutboxFacade;
+import com.banulsoft.wallet.portfoliodraft.application.PortfolioDraftFacade;
+import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraft;
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import com.banulsoft.wallet.portfolio.domain.Position;
 import com.banulsoft.wallet.shared.Ticker;
@@ -19,33 +20,25 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 class PortfolioCreatorJob {
-    private final PortfolioOutboxFacade portfolioOutboxFacade;
+    private final PortfolioDraftFacade portfolioDraftFacade;
     private final TransactionTemplate transactionTemplate;
     private final PortfolioFacade portfolioFacade;
 
     @Scheduled(fixedRate = 10000)
     public void createPortfolios() {
-        Set<PortfolioOutbox> validPortfolios = portfolioOutboxFacade.findValidPortfolios();
+        Set<PortfolioDraft> validPortfolios = portfolioDraftFacade.findValidPortfolios();
 
-        validPortfolios.forEach(portfolioOutbox -> {
-            Portfolio portfolio = toPortfolio(portfolioOutbox);
+        validPortfolios.forEach(draft -> {
+            Portfolio portfolio = draft.toPortfolio();
             try {
                 transactionTemplate.executeWithoutResult(status -> {
                     portfolioFacade.create(portfolio);
-                    portfolioOutboxFacade.markAsCreated(portfolioOutbox.getId());
+                    portfolioDraftFacade.markAsCreated(draft.getId());
                 });
             } catch (Exception e) {
                 log.error("Error when creating portfolio from outbox", e);
             }
         });
 
-    }
-
-    private static Portfolio toPortfolio(PortfolioOutbox validPortfolio) {
-        Set<Position> positions = validPortfolio.getRequests().stream()
-                .map(x -> new Position(new Ticker(x.ticker()), x.amount()))
-                .collect(Collectors.toSet());
-
-        return new Portfolio(positions, validPortfolio.getName());
     }
 }

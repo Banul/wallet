@@ -1,8 +1,8 @@
-package com.banulsoft.wallet.portfoliooutbox.web;
+package com.banulsoft.wallet.portfolio.web;
 
 import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
-import com.banulsoft.wallet.portfoliooutbox.application.PortfolioCreateCommand;
-import com.banulsoft.wallet.portfoliooutbox.application.PortfolioOutboxFacade;
+import com.banulsoft.wallet.portfolio.shared.PortfolioCreateCommand;
+import com.banulsoft.wallet.portfoliodraft.application.PortfolioDraftFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/portfolio")
 @RequiredArgsConstructor
 class Controller {
-    private final PortfolioOutboxFacade portfolioOutboxFacade;
+    private final PortfolioDraftFacade portfolioDraftFacade;
     private final PortfolioFacade portfolioFacade;
 
     @PostMapping
     void create(@RequestBody PortfolioCreateDto portfolioCreateDto) {
         PortfolioCreateCommand createCommand = CommandAdapter.createCommand(portfolioCreateDto);
-        portfolioOutboxFacade.create(createCommand);
+        portfolioDraftFacade.create(createCommand);
     }
 
     @GetMapping(path = "/all")

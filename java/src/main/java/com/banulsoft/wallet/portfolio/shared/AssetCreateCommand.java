@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.portfoliooutbox.application;
+package com.banulsoft.wallet.portfolio.shared;
 
 public record AssetCreateCommand(String ticker, double amount) {
 }

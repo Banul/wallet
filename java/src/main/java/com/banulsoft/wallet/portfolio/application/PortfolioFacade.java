@@ -18,10 +18,6 @@ public class PortfolioFacade {
        return portfolioPersistancePort.findById(portfolioId).orElseThrow(PortfolioNotExistsException::new);
     }
 
-    public List<Portfolio> findAll() {
-        return portfolioPersistancePort.findAll();
-    }
-
     public List<PortfolioBaseInformation> getBaseInformation() {
         return portfolioValueService.getBaseInformation();
     }

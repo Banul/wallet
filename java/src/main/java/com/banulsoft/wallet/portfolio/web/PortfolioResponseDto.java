@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.portfoliooutbox.web;
+package com.banulsoft.wallet.portfolio.web;
 
 import java.math.BigDecimal;
 import java.util.UUID;

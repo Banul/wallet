@@ -20,6 +20,8 @@ public class Portfolio {
         this.name = name;
     }
 
+
+    // todo - add some rules of amount etc
     public Portfolio(Set<Position> positions, String name) {
         this.positions = positions;
         this.name = name;

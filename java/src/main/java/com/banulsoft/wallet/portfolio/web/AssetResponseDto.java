@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.portfoliooutbox.web;
+package com.banulsoft.wallet.portfolio.web;
 
 record AssetResponseDto(String ticker, double amount) {
 }

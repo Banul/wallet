@@ -1,6 +1,9 @@
 package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
-public enum Status {
+/**
+ * Internal status for need of tracking outbox pattern status
+ */
+enum OutboxProcessingStatus {
     UNPROCESSED,
     SENT,
     FAILED,

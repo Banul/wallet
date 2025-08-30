@@ -1,8 +1,8 @@
 package com.banulsoft.wallet.portfoliooutbox.infrastructure;
 
-import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
+import com.banulsoft.wallet.portfolio.shared.AssetCreateCommand;
 import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
@@ -39,12 +39,13 @@ class DatabasePersistanceAdapter implements PersistancePort {
         portfolioOutboxJpaRepository.markAsCreated(requestId);
     }
 
+
     @Override
     public Set<PortfolioOutbox> findNotSendToKafka() {
         Set<PortfolioOutboxEntity> readyToBeSend = portfolioOutboxJpaRepository.findReadyForProcessing();
         return readyToBeSend
                 .stream()
-                .map(x -> new PortfolioOutbox(x.getId(), x.getName(), x.getAssets()))
+                .map(x -> new PortfolioOutbox(x.getId(), x.getName(), toCreateCommand(x)))
                 .collect(Collectors.toSet());
     }
 
@@ -52,7 +53,11 @@ class DatabasePersistanceAdapter implements PersistancePort {
     public Set<PortfolioOutbox> findSentToKafka() {
         Set<PortfolioOutboxEntity> sent = portfolioOutboxJpaRepository.findSent();
         return sent.stream()
-                .map(x -> new PortfolioOutbox(x.getId(), x.getName(), x.getAssets()))
+                .map(x -> new PortfolioOutbox(x.getId(), x.getName(), toCreateCommand(x)))
                 .collect(Collectors.toSet());
+    }
+
+    private Set<AssetCreateCommand> toCreateCommand(PortfolioOutboxEntity x) {
+        return x.getAssets().stream().map(z -> new AssetCreateCommand(z.ticker(), z.amount())).collect(Collectors.toSet());
     }
 }

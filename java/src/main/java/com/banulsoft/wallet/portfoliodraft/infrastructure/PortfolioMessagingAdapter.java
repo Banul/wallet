@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.portfolio.infrastructure;
+package com.banulsoft.wallet.portfoliodraft.infrastructure;
 
 import com.banulsoft.wallet.shared.kafka.TickerDetailsResponse;
 import jakarta.transaction.Transactional;

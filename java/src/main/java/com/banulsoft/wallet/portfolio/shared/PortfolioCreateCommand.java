@@ -1,4 +1,4 @@
-package com.banulsoft.wallet.portfoliooutbox.application;
+package com.banulsoft.wallet.portfolio.shared;
 
 import java.util.List;
 

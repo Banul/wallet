@@ -1,45 +1,22 @@
 package com.banulsoft.wallet.portfoliooutbox.application;
 
-import com.banulsoft.wallet.portfoliooutbox.domain.AssetsCreationRequest;
-import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
+import com.banulsoft.wallet.portfoliodraft.infrastructure.PortfolioSendToQueueCommand;
 import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
+import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service
 public class PortfolioOutboxFacade {
     private final PersistancePort persistancePort;
-    private final ExistingCompaniesService existingCompaniesService;
 
-    public PortfolioOutboxFacade(PersistancePort persistancePort, ExistingCompaniesService existingCompaniesService) {
+    public PortfolioOutboxFacade(PersistancePort persistancePort) {
         this.persistancePort = persistancePort;
-        this.existingCompaniesService = existingCompaniesService;
     }
 
-    public PortfolioOutbox create(PortfolioCreateCommand portfolioCreateCommand) {
-        PortfolioOutbox portfolioOutbox = new PortfolioOutbox(portfolioCreateCommand);
+    public PortfolioOutbox send(PortfolioSendToQueueCommand portfolioSendToQueueCommand) {
+        PortfolioOutbox portfolioOutbox = new PortfolioOutbox(portfolioSendToQueueCommand);
         return persistancePort.save(portfolioOutbox);
-    }
-
-    // valid portfolio means that is has only existing company names
-    public Set<PortfolioOutbox> findValidPortfolios() {
-        Set<PortfolioOutbox> validPortfolios = new HashSet<>();
-        Set<PortfolioOutbox> readyForProcessing = persistancePort.findSentToKafka();
-        readyForProcessing.forEach(portfolioOutbox -> {
-            Set<String> requestedTickers = portfolioOutbox.getRequests().stream()
-                    .map(AssetsCreationRequest::ticker)
-                    .collect(Collectors.toSet());
-            if (existingCompaniesService.allNamesExist(requestedTickers)) {
-                validPortfolios.add(portfolioOutbox);
-            }
-        });
-
-        return validPortfolios;
-    }
-
-    public void markAsCreated(UUID id) {
-        persistancePort.marAsCreated(id);
     }
 }
