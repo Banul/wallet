@@ -34,9 +34,10 @@ class DatabasePersistanceAdapter implements PersistancePort {
         portfolioOutboxJpaRepository.markAsSent(requestId);
     }
 
+
     @Override
-    public void marAsCreated(UUID requestId) {
-        portfolioOutboxJpaRepository.markAsCreated(requestId);
+    public void markAsConsumed(UUID draftId) {
+        portfolioOutboxJpaRepository.markAsConsumed(draftId);
     }
 
 

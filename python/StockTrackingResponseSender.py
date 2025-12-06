@@ -6,7 +6,7 @@ import StockTrackingStatus
 
 
 producer = KafkaProducer(
-    bootstrap_servers=['host.docker.internal:29092'],
+    bootstrap_servers=['kafka:9092'],
     value_serializer=lambda v: json.dumps(v).encode('utf-8'),
     request_timeout_ms=120000
 )

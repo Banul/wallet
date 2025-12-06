@@ -7,5 +7,6 @@ enum OutboxProcessingStatus {
     UNPROCESSED,
     SENT,
     FAILED,
-    CREATED
+    PROCESSED,
+    CONSUMED
 }

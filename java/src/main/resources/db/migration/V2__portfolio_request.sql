@@ -3,5 +3,6 @@ create table if not exists portfolio_request (
     name varchar,
     status varchar,
     assets_creation_requests jsonb,
-    created_date timestamptz
+    created_date timestamptz,
+    draft_id UUID
 );

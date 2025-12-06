@@ -1,9 +1,12 @@
-version: '3'
+version: '3.8'
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
     networks:
@@ -11,6 +14,7 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka
     depends_on:
       - zookeeper
     ports:
@@ -20,19 +24,31 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://host.docker.internal:29092
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      # stock_tracking_request -> request to start tracking company
-      # stock_tracking_response -> response about whether company can be tracked
-      # tracked_companies_request -> information about what companies we should track
-      # stock_valuation_response -> company price information
-      KAFKA_CREATE_TOPICS: "stock_tracking_request:1:1, stock_tracking_response:1:1, stock_valuation_response:1:1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
     networks:
       - kafka-net
 
+  init-kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: init-kafka
+    depends_on:
+      - kafka
+    networks:
+      - kafka-net
+    volumes:
+      - ./init-kafka.sh:/init-kafka.sh
+    command: [ "bash", "/init-kafka.sh" ]
+    restart: "no"
+
   akhq:
     image: tchiotludo/akhq
+    container_name: akhq
     depends_on:
       - kafka
     ports:
@@ -44,6 +60,9 @@ services:
             kafka:
               properties:
                 bootstrap.servers: "kafka:9092"
+          ui-options:
+            topic:
+              default-view: ALL
     networks:
       - kafka-net
 
@@ -58,6 +77,50 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  stock-tracking-listener:
+    image: python:3.11-slim
+    container_name: stock-tracking-listener
+    depends_on:
+      init-kafka:
+        condition: service_completed_successfully
+    volumes:
+      - .:/app
+    working_dir: /app
+    networks:
+      - kafka-net
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    command: >
+      bash -c "
+      echo 'Installing dependencies...' &&
+      pip install --no-cache-dir -r requirements.txt &&
+      echo 'Starting Stock Tracking Request Listener...' &&
+      python StockTrackingRequestListener.py
+      "
+    restart: unless-stopped
+
+  stock-valuation-refresher:
+    image: python:3.11-slim
+    container_name: stock-valuation-refresher
+    depends_on:
+      init-kafka:
+        condition: service_completed_successfully
+    volumes:
+      - .:/app
+    working_dir: /app
+    networks:
+      - kafka-net
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    command: >
+      bash -c "
+      echo 'Installing dependencies...' &&
+      pip install --no-cache-dir -r requirements.txt &&
+      echo 'Starting Stock Valuation Refresher...' &&
+      python StockValuationRefresher.py
+      "
+    restart: unless-stopped
 
 networks:
   kafka-net:

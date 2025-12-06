@@ -4,7 +4,6 @@ import com.banulsoft.wallet.portfoliodraft.infrastructure.PortfolioSendToQueueCo
 import com.banulsoft.wallet.portfoliooutbox.domain.PersistancePort;
 import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
@@ -18,5 +17,9 @@ public class PortfolioOutboxFacade {
     public PortfolioOutbox send(PortfolioSendToQueueCommand portfolioSendToQueueCommand) {
         PortfolioOutbox portfolioOutbox = new PortfolioOutbox(portfolioSendToQueueCommand);
         return persistancePort.save(portfolioOutbox);
+    }
+
+    public void markAsConsumed(UUID id) {
+        persistancePort.markAsConsumed(id);
     }
 }

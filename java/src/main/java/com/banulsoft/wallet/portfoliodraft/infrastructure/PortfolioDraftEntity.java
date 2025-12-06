@@ -3,14 +3,14 @@ package com.banulsoft.wallet.portfoliodraft.infrastructure;
 import com.banulsoft.wallet.portfolio.shared.AssetCreateCommand;
 import com.banulsoft.wallet.portfoliodraft.domain.DraftStatus;
 import com.banulsoft.wallet.shared.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
+@Entity
+@Table(name = "portfolio_draft")
 public class PortfolioDraftEntity extends BaseEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "assets_creation_requests")

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ public class PortfolioDraftFacade {
                 .collect(Collectors.toSet());
 
         if (!existingCompaniesService.allNamesExist(tickers)) {
+            // todo - send only ones that not exists (not all)
             portfolioOutboxFacade.send(new PortfolioSendToQueueCommand(portfolioCreateCommand.assets(), portfolioCreateCommand.name(), savedEntity.getId()));
         } else {
             Portfolio portfolio = portfolioDraft.toPortfolio();
@@ -44,9 +46,10 @@ public class PortfolioDraftFacade {
     }
 
     // valid portfolio means that is has only existing companies names
+    @Transactional
     public Set<PortfolioDraft> findValidPortfolios() {
         Set<PortfolioDraft> validPortfolios = new HashSet<>();
-        Set<PortfolioDraft> readyForProcessing = persistancePort.findSentToQueue();
+        Set<PortfolioDraft> readyForProcessing = persistancePort.findPending();
         readyForProcessing.forEach(draft -> {
             Set<String> requestedTickers = draft.getAssetsCreationRequests().stream()
                     .map(AssetCreateCommand::ticker)
@@ -64,5 +67,6 @@ public class PortfolioDraftFacade {
         PortfolioDraft portfolioDraft = persistancePort.findById(id).orElseThrow(EntityNotFoundException::new);
         portfolioDraft.markAsCreated();
         persistancePort.save(portfolioDraft);
+        portfolioOutboxFacade.markAsConsumed(portfolioDraft.getId());
     }
 }

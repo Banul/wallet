@@ -2,11 +2,8 @@
 
 from confluent_kafka import Consumer, KafkaException
 
-from kafka.errors import KafkaError
-
 import CompaniesTracker
 import StockTrackingResponseSender
-import StockTrackingStatus
 from StockFetcher import StockFetcher
 from StockTrackingResponseSender import *
 from confluent_kafka import Consumer, KafkaError
@@ -14,7 +11,7 @@ from confluent_kafka import Consumer, KafkaError
 from exception.TickerNotExistsException import TickerNotExistsException
 
 conf = {
-    'bootstrap.servers': 'localhost:29092',
+    'bootstrap.servers': 'kafka:9092',
     'group.id': 'my_consumer_group',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False

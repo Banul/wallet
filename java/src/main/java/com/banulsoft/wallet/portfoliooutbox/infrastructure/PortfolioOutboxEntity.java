@@ -24,6 +24,7 @@ class PortfolioOutboxEntity extends BaseEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "draft_id")
     private UUID draftId;
 
     protected PortfolioOutboxEntity() {}
@@ -36,6 +37,7 @@ class PortfolioOutboxEntity extends BaseEntity {
 
         this.name = portfolioOutbox.getName();
         this.outboxProcessingStatus = OutboxProcessingStatus.UNPROCESSED;
+        this.draftId = portfolioOutbox.getDraftId();
     }
 
     public UUID getId() {

@@ -17,13 +17,13 @@ interface PortfolioOutboxJpaRepository extends JpaRepository<PortfolioOutboxEnti
     @Modifying
     void markAsFailure(UUID requestId);
 
-    @Query(value = "update portfolio_request set status = 'CREATED' where id = :requestId", nativeQuery = true)
-    @Modifying
-    void markAsCreated(UUID requestId);
-
     @Query(value = "select * from portfolio_request pr where pr.status = 'UNPROCESSED'", nativeQuery = true)
     Set<PortfolioOutboxEntity> findReadyForProcessing();
 
     @Query(value = "select * from portfolio_request pr where pr.status = 'SENT'", nativeQuery = true)
     Set<PortfolioOutboxEntity> findSent();
+
+    @Query(value = "update portfolio_request set status = 'CONSUMED' where draft_id = :draftId", nativeQuery = true)
+    @Modifying
+    void markAsConsumed(UUID draftId);
 }

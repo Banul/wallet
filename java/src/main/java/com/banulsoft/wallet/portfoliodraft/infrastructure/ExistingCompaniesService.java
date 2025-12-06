@@ -21,6 +21,10 @@ public class ExistingCompaniesService {
         }
 
         List<SearchedCompany> companies = findByTickers(tickers);
+        if (tickers.size() != companies.size()) {
+            // at least one company not found in list
+            return false;
+        }
         return companies.stream().allMatch(SearchedCompany::isDoesExist);
     }
 

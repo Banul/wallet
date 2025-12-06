@@ -29,8 +29,8 @@ public class PortfolioDraftPersistanceAdapter implements PortfolioDraftPersistan
     }
 
     @Override
-    public Set<PortfolioDraft> findSentToQueue() {
-        return portfolioDraftJpaRepository.findSent()
+    public Set<PortfolioDraft> findPending() {
+        return portfolioDraftJpaRepository.findPending()
                 .stream().map(x -> new PortfolioDraft(x.getId(), x.getName(), x.getAssetsCreationRequests()))
                 .collect(Collectors.toSet());
     }

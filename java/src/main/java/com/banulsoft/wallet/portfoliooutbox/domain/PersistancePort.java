@@ -14,5 +14,5 @@ public interface PersistancePort {
 
     Set<PortfolioOutbox> findSentToKafka();
 
-    void marAsCreated(UUID requestId);
+    void markAsConsumed(UUID draftId);
 }
