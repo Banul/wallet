@@ -98,13 +98,23 @@ const PortfolioList = () => {
                   <TableCell>{portf.name}</TableCell>
                   <TableCell>{portf.value} zł</TableCell>
                   <TableCell>
-                    <Button
-                      variant="outlined"
-                      onClick={() => navigate(`/portfolio-details/${portf.id}`)}
-                    >
-                      Detale
-                    </Button>
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        variant="outlined"
+                        onClick={() => navigate(`/portfolio-details/${portf.id}`)}
+                      >
+                        Detale
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => navigate(`/portfolio-live/${portf.id}`)}
+                      >
+                        Śledź na żywo
+                      </Button>
+                    </Stack>
                   </TableCell>
+
                 </TableRow>
               ))}
             </TableBody>

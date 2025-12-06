@@ -5,8 +5,8 @@ import com.banulsoft.wallet.portfolio.shared.PortfolioCreateCommand;
 import com.banulsoft.wallet.portfoliodraft.application.PortfolioDraftFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,5 +28,12 @@ class Controller {
                 .stream()
                 .map(x -> new PortfolioResponseDto(x.getId(), x.getName(), x.getValue()))
                 .collect(Collectors.toSet());
+    }
+
+    @GetMapping(path = "/{id}")
+    public PortfolioResponseDto findById(@PathVariable UUID id) {
+        return portfolioFacade.findBaseInformation(id)
+                .map(x -> new PortfolioResponseDto(x.getId(), x.getName(), x.getValue()))
+                .orElse(null);
     }
 }

@@ -25,7 +25,7 @@ class PortfolioPersistanceAdapter implements PortfolioPersistancePort {
     @Override
     public Optional<Portfolio> findById(UUID portfolioId) {
         return portfolioJpaRepository.findById(portfolioId)
-                .map(x -> new Portfolio(x.getPositions(), x.getName()));
+                .map(x -> new Portfolio(x.getId(), x.getPositions(), x.getName()));
     }
 
     @Override

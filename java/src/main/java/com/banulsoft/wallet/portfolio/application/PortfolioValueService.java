@@ -59,4 +59,17 @@ class PortfolioValueService {
 
         return portfolioBaseInformation;
     }
+
+    public Optional<PortfolioBaseInformation> getBaseInformation(UUID portfolioId) {
+        Optional<Portfolio> portfolio = portfolioPersistancePort.findById(portfolioId);
+        return portfolio.map(p -> {
+            PortfolioValue portfolioValue = calculate(p.getId());
+            return new PortfolioBaseInformation(
+                    p.getId(),
+                    p.getName(),
+                    portfolioValue.getPrice(),
+                    Currency.PLN);
+
+        });
+    }
 }

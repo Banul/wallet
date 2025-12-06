@@ -3,10 +3,12 @@ package com.banulsoft.wallet.portfolio.application;
 import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsException;
 import com.banulsoft.wallet.portfolio.domain.Portfolio;
 import com.banulsoft.wallet.portfolio.domain.PortfolioPersistancePort;
+import com.banulsoft.wallet.portfoliodetails.domain.PortfolioDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,5 +26,9 @@ public class PortfolioFacade {
 
     public void create(Portfolio portfolio) {
         portfolioPersistancePort.save(portfolio);
+    }
+
+    public Optional<PortfolioBaseInformation> findBaseInformation(UUID id) {
+        return portfolioValueService.getBaseInformation(id);
     }
 }
