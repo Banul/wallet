@@ -24,7 +24,7 @@ class Controller {
 
     @GetMapping(path = "/all")
     Set<PortfolioResponseDto> getAll() {
-        return portfolioFacade.getBaseInformation()
+        return portfolioFacade.getBaseInformationForAllPortfolios()
                 .stream()
                 .map(x -> new PortfolioResponseDto(x.getId(), x.getName(), x.getValue()))
                 .collect(Collectors.toSet());
@@ -32,7 +32,7 @@ class Controller {
 
     @GetMapping(path = "/{id}")
     public PortfolioResponseDto findById(@PathVariable UUID id) {
-        return portfolioFacade.findBaseInformation(id)
+        return portfolioFacade.getBaseInformationForPortfolio(id)
                 .map(x -> new PortfolioResponseDto(x.getId(), x.getName(), x.getValue()))
                 .orElse(null);
     }

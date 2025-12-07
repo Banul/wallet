@@ -14,7 +14,7 @@ def query_database():
     conn.close()
     return tickers
 
-interval = 10
+interval = 30
 
 stockFetcher = StockFetcher()
 while True:

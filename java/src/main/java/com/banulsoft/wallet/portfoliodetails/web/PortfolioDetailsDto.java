@@ -7,7 +7,7 @@ import java.util.List;
 class PortfolioDetailsDto {
     private List<StockDetailDto> stockDetails;
     PortfolioDetailsDto(PortfolioDetails portfolioDetails) {
-        this.stockDetails = portfolioDetails.getStockInfo().stream().map(x -> new StockDetailDto(
+        this.stockDetails = portfolioDetails.stockInfo().stream().map(x -> new StockDetailDto(
                 x.getTicker().name(),
                 x.getSector().getName(),
                 x.getIndustry(),

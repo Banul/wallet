@@ -12,7 +12,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class StockValuationFacade {
     private final PersistancePort persistancePort;
-    public Set<StockValuation> calculateForTickers(Set<Ticker> tickers) {
+    public Set<StockValuation> getValuationForTickers(Set<Ticker> tickers) {
         return persistancePort.findByTickers(tickers);
     }
 }

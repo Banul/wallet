@@ -13,8 +13,13 @@ import {
   TableRow,
   CircularProgress,
   Alert,
-  Stack
+  Stack,
+  IconButton, 
+  Tooltip
 } from "@mui/material";
+
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import PublicIcon from '@mui/icons-material/Public'; // Ikona kuli ziemskiej dla statystyk
 
 const PortfolioList = () => {
   const [portfolios, setPortfolios] = useState([]);
@@ -98,23 +103,31 @@ const PortfolioList = () => {
                   <TableCell>{portf.name}</TableCell>
                   <TableCell>{portf.value} zł</TableCell>
                   <TableCell>
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} alignItems="center">
                       <Button
                         variant="outlined"
                         onClick={() => navigate(`/portfolio-details/${portf.id}`)}
                       >
                         Detale
                       </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => navigate(`/portfolio-live/${portf.id}`)}
-                      >
-                        Śledź na żywo
-                      </Button>
+                      <Tooltip title="Śledź na żywo" arrow>
+                        <IconButton
+                          color="primary"
+                          onClick={() => navigate(`/portfolio-live/${portf.id}`)}
+                        >
+                          <ShowChartIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Statystyki geograficzne" arrow>
+                        <IconButton
+                          color="secondary"
+                          onClick={() => navigate(`/portfolio-statistics/${portf.id}`)}
+                        >
+                          <PublicIcon />
+                        </IconButton>
+                      </Tooltip>
                     </Stack>
                   </TableCell>
-
                 </TableRow>
               ))}
             </TableBody>

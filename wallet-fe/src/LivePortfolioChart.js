@@ -60,8 +60,8 @@ const LivePortfolioChart = () => {
     // Pierwsze pobranie od razu
     fetchPortfolioValue();
 
-    // Następnie co 5 sekund
-    interval = setInterval(fetchPortfolioValue, 5000);
+    // Następnie co 30 sekund
+    interval = setInterval(fetchPortfolioValue, 30000);
 
     return () => clearInterval(interval);
   }, [id]);
@@ -107,7 +107,7 @@ const LivePortfolioChart = () => {
       </Stack>
 
       <Typography variant="body2" color="text.secondary" mb={2}>
-        Wykres aktualizuje się co 5 sekund
+        Wykres aktualizuje się co 30 sekund
       </Typography>
 
       <ResponsiveContainer width="100%" height={400}>

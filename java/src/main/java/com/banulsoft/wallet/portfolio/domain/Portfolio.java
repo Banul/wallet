@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Getter
 public class Portfolio {
-    private String name;
+    private final String name;
     private UUID id;
     private final Set<Position> positions;
 
