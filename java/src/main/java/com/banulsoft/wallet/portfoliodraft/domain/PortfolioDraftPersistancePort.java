@@ -8,5 +8,5 @@ public interface PortfolioDraftPersistancePort {
     PortfolioDraft save(PortfolioDraft portfolioDraft);
     Set<PortfolioDraft> findPending();
 
-    Optional<PortfolioDraft> findById(UUID id);
+    void markAsCreated(UUID id);
 }

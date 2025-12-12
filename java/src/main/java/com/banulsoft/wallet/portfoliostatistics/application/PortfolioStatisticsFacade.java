@@ -6,10 +6,10 @@ import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsEx
 import com.banulsoft.wallet.portfolio.domain.PortfolioId;
 import com.banulsoft.wallet.portfolio.domain.TickerValue;
 import com.banulsoft.wallet.portfoliostatistics.domain.CountryShare;
-import com.banulsoft.wallet.portfoliostatistics.domain.IndustryShare;
+import com.banulsoft.wallet.portfoliostatistics.domain.SectorShare;
 import com.banulsoft.wallet.portfoliostatistics.domain.PortfolioStatistics;
 import com.banulsoft.wallet.shared.CountryCode;
-import com.banulsoft.wallet.shared.Industry;
+import com.banulsoft.wallet.shared.Sector;
 import com.banulsoft.wallet.shared.Percent;
 import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.stockinformation.application.StockInformationFacade;
@@ -37,9 +37,9 @@ public class PortfolioStatisticsFacade {
         BigDecimal totalValue = getTotalPortfolioValue(portfolioId);
 
         List<CountryShare> countryShares = calculateCountryShares(tickerValues, stockInfoMap, totalValue);
-        List<IndustryShare> industryShares = calculateIndustryShares(tickerValues, stockInfoMap, totalValue);
+        List<SectorShare> sectorShares = calculateIndustryShares(tickerValues, stockInfoMap, totalValue);
 
-        return new PortfolioStatistics(countryShares, industryShares);
+        return new PortfolioStatistics(countryShares, sectorShares);
     }
 
     private Map<Ticker, StockInformation> fetchStockInformationMap(List<TickerValue> tickerValues) {
@@ -71,15 +71,15 @@ public class PortfolioStatisticsFacade {
                 .toList();
     }
 
-    private List<IndustryShare> calculateIndustryShares(
+    private List<SectorShare> calculateIndustryShares(
             List<TickerValue> tickerValues,
             Map<Ticker, StockInformation> stockInfoMap,
             BigDecimal totalValue) {
 
-        Map<Industry, BigDecimal> industryValues = aggregateValuesByIndustry(tickerValues, stockInfoMap);
+        Map<Sector, BigDecimal> industryValues = aggregateValuesByIndustry(tickerValues, stockInfoMap);
 
         return industryValues.entrySet().stream()
-                .map(entry -> new IndustryShare(entry.getKey(), calculatePercent(entry.getValue(), totalValue)))
+                .map(entry -> new SectorShare(entry.getKey(), calculatePercent(entry.getValue(), totalValue)))
                 .toList();
     }
 
@@ -105,11 +105,11 @@ public class PortfolioStatisticsFacade {
         return countryValues;
     }
 
-    private Map<Industry, BigDecimal> aggregateValuesByIndustry(
+    private Map<Sector, BigDecimal> aggregateValuesByIndustry(
             List<TickerValue> tickerValues,
             Map<Ticker, StockInformation> stockInfoMap) {
 
-        Map<Industry, BigDecimal> industryValues = new HashMap<>();
+        Map<Sector, BigDecimal> industryValues = new HashMap<>();
 
         for (TickerValue tickerValue : tickerValues) {
             StockInformation stockInfo = stockInfoMap.get(tickerValue.ticker());
@@ -118,10 +118,10 @@ public class PortfolioStatisticsFacade {
                 continue;
             }
 
-            String industryName = stockInfo.getIndustry();
-            if (industryName != null && !industryName.isBlank()) {
-                Industry industry = new Industry(industryName);
-                industryValues.merge(industry, tickerValue.value(), BigDecimal::add);
+            String sectorName = stockInfo.getSector().getName();
+            if (sectorName != null && !sectorName.isBlank()) {
+                Sector sector = new Sector(sectorName);
+                industryValues.merge(sector, tickerValue.value(), BigDecimal::add);
             }
         }
 

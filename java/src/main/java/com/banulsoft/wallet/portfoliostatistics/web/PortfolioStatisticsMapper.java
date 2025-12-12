@@ -1,7 +1,7 @@
 package com.banulsoft.wallet.portfoliostatistics.web;
 
 import com.banulsoft.wallet.portfoliostatistics.domain.CountryShare;
-import com.banulsoft.wallet.portfoliostatistics.domain.IndustryShare;
+import com.banulsoft.wallet.portfoliostatistics.domain.SectorShare;
 import com.banulsoft.wallet.portfoliostatistics.domain.PortfolioStatistics;
 import org.springframework.stereotype.Component;
 
@@ -29,10 +29,10 @@ class PortfolioStatisticsMapper {
         );
     }
 
-    private IndustryShareDto toIndustryShareDto(IndustryShare industryShare) {
+    private IndustryShareDto toIndustryShareDto(SectorShare sectorShare) {
         return new IndustryShareDto(
-                industryShare.industry().industry(),
-                industryShare.percent().value()
+                sectorShare.sector().industry(),
+                sectorShare.percent().value()
         );
     }
 }

@@ -4,6 +4,7 @@ import Portfolio from "./Portfolio";
 import PortfolioDetailPage from "./PortfolioDetailPage";
 import LivePortfolioChart from "./LivePortfolioChart";
 import PortfolioStatisticsMap from "./PortfolioStatisticsMap";
+import PortfolioIndustryStatistics from "./PortfolioIndustryStatistics";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/portfolio-details/:id" element={<PortfolioDetailPage />} />
         <Route path="/portfolio-live/:id" element={<LivePortfolioChart />} />
         <Route path="/portfolio-statistics/:id" element={<PortfolioStatisticsMap />} />
+        <Route path="/portfolio-industry-statistics/:id" element={<PortfolioIndustryStatistics />} />
       </Routes>
     </Router>
   );

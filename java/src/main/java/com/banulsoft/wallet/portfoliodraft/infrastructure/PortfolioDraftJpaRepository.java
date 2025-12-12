@@ -7,6 +7,6 @@ import java.util.Set;
 import java.util.UUID;
 
 interface PortfolioDraftJpaRepository extends JpaRepository<PortfolioDraftEntity, UUID> {
-    @Query(value = "select * from portfolio_draft pr where pr.status = 'PENDING'", nativeQuery = true)
+    @Query(value = "select * from portfolio_draft pr where pr.status = 'READY_FOR_PROCESSING' FOR UPDATE", nativeQuery = true)
     Set<PortfolioDraftEntity> findPending();
 }

@@ -1,5 +1,6 @@
 package com.banulsoft.wallet.portfoliodraft.infrastructure;
 
+import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsException;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraft;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftPersistancePort;
 import com.banulsoft.wallet.portfoliodraft.domain.DraftStatus;
@@ -22,8 +23,8 @@ public class PortfolioDraftPersistanceAdapter implements PortfolioDraftPersistan
     public PortfolioDraft save(PortfolioDraft portfolioDraft) {
         PortfolioDraftEntity portfolioDraftEntity = new PortfolioDraftEntity();
         portfolioDraftEntity.setName(portfolioDraft.getName());
-        portfolioDraftEntity.setStatus(DraftStatus.CREATED);
         portfolioDraftEntity.setAssetsCreationRequests(portfolioDraft.getAssetsCreationRequests());
+        portfolioDraftEntity.setStatus(portfolioDraft.getStatus());
         PortfolioDraftEntity entity = portfolioDraftJpaRepository.save(portfolioDraftEntity);
         return new PortfolioDraft(entity.getId(), entity.getName(), entity.getAssetsCreationRequests());
     }
@@ -31,13 +32,15 @@ public class PortfolioDraftPersistanceAdapter implements PortfolioDraftPersistan
     @Override
     public Set<PortfolioDraft> findPending() {
         return portfolioDraftJpaRepository.findPending()
-                .stream().map(x -> new PortfolioDraft(x.getId(), x.getName(), x.getAssetsCreationRequests()))
+                .stream()
+                .map(x -> new PortfolioDraft(x.getId(), x.getName(), x.getAssetsCreationRequests(), x.getStatus()))
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Optional<PortfolioDraft> findById(UUID id) {
-        return portfolioDraftJpaRepository.findById(id)
-                .map(x -> new PortfolioDraft(x.getId(), x.getName(), x.getAssetsCreationRequests()));
+    public void markAsCreated(UUID id) {
+        PortfolioDraftEntity portfolioDraftEntity = portfolioDraftJpaRepository.findById(id).orElseThrow(PortfolioNotExistsException::new);
+        portfolioDraftEntity.setStatus(DraftStatus.CREATED);
+        portfolioDraftJpaRepository.save(portfolioDraftEntity);
     }
 }

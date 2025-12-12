@@ -32,6 +32,7 @@ class PortfolioCreatorJob {
             Portfolio portfolio = draft.toPortfolio();
             try {
                 transactionTemplate.executeWithoutResult(status -> {
+                    log.info("Creating portfolio: {}", portfolio.getName());
                     portfolioFacade.create(portfolio);
                     portfolioDraftFacade.markAsCreated(draft.getId());
                 });
@@ -39,6 +40,5 @@ class PortfolioCreatorJob {
                 log.error("Error when creating portfolio from outbox", e);
             }
         });
-
     }
 }

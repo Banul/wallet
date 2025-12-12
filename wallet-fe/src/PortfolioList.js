@@ -14,12 +14,13 @@ import {
   CircularProgress,
   Alert,
   Stack,
-  IconButton, 
+  IconButton,
   Tooltip
 } from "@mui/material";
 
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import PublicIcon from '@mui/icons-material/Public'; // Ikona kuli ziemskiej dla statystyk
+import PublicIcon from '@mui/icons-material/Public';
+import BusinessIcon from '@mui/icons-material/Business'; 
 
 const PortfolioList = () => {
   const [portfolios, setPortfolios] = useState([]);
@@ -124,6 +125,14 @@ const PortfolioList = () => {
                           onClick={() => navigate(`/portfolio-statistics/${portf.id}`)}
                         >
                           <PublicIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Statystyki branżowe" arrow>
+                        <IconButton
+                          color="success"
+                          onClick={() => navigate(`/portfolio-industry-statistics/${portf.id}`)}
+                        >
+                          <BusinessIcon />
                         </IconButton>
                       </Tooltip>
                     </Stack>

@@ -1,23 +1,21 @@
 package com.banulsoft.wallet.portfoliostatistics.domain;
 
-import com.banulsoft.wallet.shared.Percent;
-
 import java.util.List;
 
 public class PortfolioStatistics {
     private final List<CountryShare> countryShares;
-    private List<IndustryShare> industryShares;
+    private List<SectorShare> sectorShares;
 
-    public PortfolioStatistics(List<CountryShare> countryShares, List<IndustryShare> industryShares) {
+    public PortfolioStatistics(List<CountryShare> countryShares, List<SectorShare> sectorShares) {
         this.countryShares = countryShares;
-        this.industryShares = industryShares;
+        this.sectorShares = sectorShares;
     }
 
     public List<CountryShare> getCountryShares() {
         return countryShares;
     }
 
-    public List<IndustryShare> getIndustryShares() {
-        return industryShares;
+    public List<SectorShare> getIndustryShares() {
+        return sectorShares;
     }
 }

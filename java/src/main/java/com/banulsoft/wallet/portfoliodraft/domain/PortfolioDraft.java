@@ -17,11 +17,18 @@ public class PortfolioDraft {
 
     private DraftStatus draftStatus;
 
+    public PortfolioDraft(UUID id, String name, List<AssetCreateCommand> assetsCreationRequests, DraftStatus draftStatus) {
+        this.id = id;
+        this.name = name;
+        this.assetsCreationRequests = assetsCreationRequests;
+        this.draftStatus = draftStatus;
+    }
+
     public PortfolioDraft(UUID id, String name, List<AssetCreateCommand> assetsCreationRequests) {
         this.id = id;
         this.name = name;
         this.assetsCreationRequests = assetsCreationRequests;
-        this.draftStatus = DraftStatus.CREATED;
+        this.draftStatus = DraftStatus.PENDING;
     }
 
     public UUID getId() {
@@ -36,8 +43,8 @@ public class PortfolioDraft {
         return assetsCreationRequests;
     }
 
-    public void markAsCreated() {
-        this.draftStatus = DraftStatus.CREATED;
+    public void markAsReadyForProcessing() {
+        this.draftStatus = DraftStatus.READY_FOR_PROCESSING;
     }
 
     public Portfolio toPortfolio() {
@@ -46,5 +53,9 @@ public class PortfolioDraft {
                 .collect(Collectors.toSet());
 
         return new Portfolio(positions, this.getName());
+    }
+
+    public DraftStatus getStatus() {
+        return this.draftStatus;
     }
 }

@@ -1,7 +1,6 @@
 package com.banulsoft.wallet.portfoliodraft.application;
 
 import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
-import com.banulsoft.wallet.portfolio.domain.Portfolio;
 import com.banulsoft.wallet.portfolio.shared.AssetCreateCommand;
 import com.banulsoft.wallet.portfolio.shared.PortfolioCreateCommand;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraft;
@@ -9,13 +8,11 @@ import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftPersistancePort;
 import com.banulsoft.wallet.portfoliodraft.infrastructure.ExistingCompaniesService;
 import com.banulsoft.wallet.portfoliodraft.infrastructure.PortfolioSendToQueueCommand;
 import com.banulsoft.wallet.portfoliooutbox.application.PortfolioOutboxFacade;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,7 +23,6 @@ public class PortfolioDraftFacade {
     private final PortfolioDraftPersistancePort persistancePort;
     private final ExistingCompaniesService existingCompaniesService;
     private final PortfolioOutboxFacade portfolioOutboxFacade;
-    private final PortfolioFacade portfolioFacade;
 
     @Transactional
     public void create(PortfolioCreateCommand portfolioCreateCommand) {
@@ -40,8 +36,8 @@ public class PortfolioDraftFacade {
             // todo - send only ones that not exists (not all)
             portfolioOutboxFacade.send(new PortfolioSendToQueueCommand(portfolioCreateCommand.assets(), portfolioCreateCommand.name(), savedEntity.getId()));
         } else {
-            Portfolio portfolio = portfolioDraft.toPortfolio();
-            portfolioFacade.create(portfolio);
+            portfolioDraft.markAsReadyForProcessing();
+            persistancePort.save(portfolioDraft);
         }
     }
 
@@ -64,9 +60,7 @@ public class PortfolioDraftFacade {
 
     @Transactional
     public void markAsCreated(UUID id) {
-        PortfolioDraft portfolioDraft = persistancePort.findById(id).orElseThrow(EntityNotFoundException::new);
-        portfolioDraft.markAsCreated();
-        persistancePort.save(portfolioDraft);
-        portfolioOutboxFacade.markAsConsumed(portfolioDraft.getId());
+        persistancePort.markAsCreated(id);
+        portfolioOutboxFacade.markAsConsumed(id);
     }
 }
