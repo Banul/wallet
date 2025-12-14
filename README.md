@@ -28,3 +28,7 @@ I've got lot of ideas of how to develop this application. Some of them are menti
 
 ## Additional information
 Application is still in **very** early phase of development - it may contain bugs.
+
+## Disclaimer
+This is a hobby project for educational purposes only. 
+Do not use for making financial decisions. No warranty provided.
