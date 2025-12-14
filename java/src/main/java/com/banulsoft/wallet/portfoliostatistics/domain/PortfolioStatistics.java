@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PortfolioStatistics {
     private final List<CountryShare> countryShares;
-    private List<SectorShare> sectorShares;
+    private final List<SectorShare> sectorShares;
 
     public PortfolioStatistics(List<CountryShare> countryShares, List<SectorShare> sectorShares) {
         this.countryShares = countryShares;

@@ -33,7 +33,7 @@ const LivePortfolioChart = () => {
 
     const fetchPortfolioValue = async () => {
       try {
-        const response = await fetch(`http://localhost:8081/portfolio/${id}`);
+        const response = await fetch(`http://localhost:8081/portfolio-valuation/${id}`);
         if (!response.ok) throw new Error("Błąd pobierania danych portfolio");
         
         const data = await response.json();

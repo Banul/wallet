@@ -3,7 +3,7 @@ package com.banulsoft.wallet.stockvaluation.infrastructure;
 import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.stockvaluation.domain.Currency;
 import com.banulsoft.wallet.stockvaluation.domain.PersistancePort;
-import com.banulsoft.wallet.stockvaluation.domain.Price;
+import com.banulsoft.wallet.stockvaluation.domain.Valuation;
 import com.banulsoft.wallet.stockvaluation.domain.StockValuation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,7 +25,12 @@ class StockValuationPersistanceAdapter implements PersistancePort {
     @Override
     public StockValuation save(StockValuation stockValuation) {
         StockValuationHistoryEntity stockValuationHistoryEntity = StockValuationHistoryEntity.from(stockValuation);
-        stockValuationHistoryJpaRepository.save(stockValuationHistoryEntity);
+        saveHistory(stockValuationHistoryEntity);
+        saveCurrent(stockValuation);
+        return stockValuation;
+    }
+
+    private void saveCurrent(StockValuation stockValuation) {
         jdbcTemplate.update("""
                 insert into stock_valuation_current (id, ticker, price, currency, created_date) values (?, ?, ?, ?, ?)
                 on conflict (ticker) do update set
@@ -36,8 +41,10 @@ class StockValuationPersistanceAdapter implements PersistancePort {
                 stockValuation.price(),
                 stockValuation.currencyName(),
                 Timestamp.from(Instant.now()));
+    }
 
-        return stockValuation;
+    private void saveHistory(StockValuationHistoryEntity stockValuationHistoryEntity) {
+        stockValuationHistoryJpaRepository.save(stockValuationHistoryEntity);
     }
 
     @Override
@@ -49,6 +56,6 @@ class StockValuationPersistanceAdapter implements PersistancePort {
     }
 
     private static StockValuation createValuation(StockValuationCurrentEntity x) {
-        return new StockValuation(new Ticker(x.getTicker()), new Price(x.getPrice(), Currency.valueOf(x.getCurrency())));
+        return new StockValuation(new Ticker(x.getTicker()), new Valuation(x.getPrice(), Currency.valueOf(x.getCurrency())));
     }
 }

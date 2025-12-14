@@ -1,5 +1,6 @@
 package com.banulsoft.wallet.stockvaluation.infrastructure;
 
+import com.banulsoft.wallet.portfoliovaluation.application.PortfolioValuationFacade;
 import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.shared.kafka.StockValuationResponse;
 import com.banulsoft.wallet.stockvaluation.domain.*;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StockValuationListener {
     private final PersistancePort persistancePort;
+    private final PortfolioValuationFacade portfolioValuationFacade;
 
     @KafkaListener(
             id = "stock-valuation-listener",
@@ -21,7 +23,7 @@ public class StockValuationListener {
     )
     public void fetchStockPrice(@Payload StockValuationResponse event) {
         Currency currency = Currency.valueOf(event.getCurrency());
-        StockValuation stockValuation = new StockValuation(new Ticker(event.getTicker()), new Price(event.getPrice(), currency));
+        StockValuation stockValuation = new StockValuation(new Ticker(event.getTicker()), new Valuation(event.getPrice(), currency));
         persistancePort.save(stockValuation);
     }
 }

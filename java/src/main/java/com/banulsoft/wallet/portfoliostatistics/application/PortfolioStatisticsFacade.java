@@ -8,6 +8,7 @@ import com.banulsoft.wallet.portfolio.domain.TickerValue;
 import com.banulsoft.wallet.portfoliostatistics.domain.CountryShare;
 import com.banulsoft.wallet.portfoliostatistics.domain.SectorShare;
 import com.banulsoft.wallet.portfoliostatistics.domain.PortfolioStatistics;
+import com.banulsoft.wallet.portfoliovaluation.application.PortfolioValuationFacade;
 import com.banulsoft.wallet.shared.CountryCode;
 import com.banulsoft.wallet.shared.Sector;
 import com.banulsoft.wallet.shared.Percent;
@@ -28,11 +29,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PortfolioStatisticsFacade {
-    private final PortfolioFacade portfolioFacade;
     private final StockInformationFacade stockInformationFacade;
+    private final PortfolioValuationFacade portfolioValuationFacade;
 
     public PortfolioStatistics calculateStatisticsForPortfolio(PortfolioId portfolioId) {
-        List<TickerValue> tickerValues = portfolioFacade.getTickerValuesForPortfolio(portfolioId);
+        List<TickerValue> tickerValues = portfolioValuationFacade.valuesPerTicker(portfolioId);
         Map<Ticker, StockInformation> stockInfoMap = fetchStockInformationMap(tickerValues);
         BigDecimal totalValue = getTotalPortfolioValue(portfolioId);
 
@@ -54,9 +55,7 @@ public class PortfolioStatisticsFacade {
     }
 
     private BigDecimal getTotalPortfolioValue(PortfolioId portfolioId) {
-        return portfolioFacade.getBaseInformationForPortfolio(portfolioId.id())
-                .map(PortfolioBaseInformation::getValue)
-                .orElseThrow(PortfolioNotExistsException::new);
+        return portfolioValuationFacade.getValuationForPortfolio(portfolioId.id()).valuation().price();
     }
 
     private List<CountryShare> calculateCountryShares(

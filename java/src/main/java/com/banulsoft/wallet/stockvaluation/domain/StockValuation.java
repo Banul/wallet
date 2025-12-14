@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Getter
 public class StockValuation {
     private Ticker ticker;
-    private Price price;
+    private Valuation price;
 
     public String tickerName() {
         return ticker.name();
@@ -26,7 +26,7 @@ public class StockValuation {
         return price.currency().name();
     }
 
-    public StockValuation(Ticker ticker, Price price) {
+    public StockValuation(Ticker ticker, Valuation price) {
         this.ticker = ticker;
         this.price = price;
     }

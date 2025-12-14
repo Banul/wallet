@@ -32,7 +32,7 @@ const PortfolioList = () => {
     const fetchPortfolios = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:8081/portfolio/all");
+        const response = await fetch("http://localhost:8081/portfolio-valuation/all");
         if (!response.ok) throw new Error("Błąd pobierania portfeli");
         const data = await response.json();
         setPortfolios(data);
