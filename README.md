@@ -1,5 +1,5 @@
 ## Project wallet
-Project walled is a web tool, that is still in very early devlopment phase. 
+Project walled is a web tool, that is still in very early devlopment phase (may have bugs). 
 As it evolved from POC it's missing tests for now (I focused mostly on useful capabilities). 
 
 Currently what project wallet can help you in:
