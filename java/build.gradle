@@ -1,0 +1,84 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'groovy'
+}
+
+group = 'com.banulsoft.wallet'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.apache.groovy:groovy:4.0.24'
+        force 'org.apache.groovy:groovy-json:4.0.24'
+        force 'org.apache.groovy:groovy-xml:4.0.24'
+    }
+}
+
+dependencies {
+    implementation libs.org.springframework.boot.spring.boot.starter.web
+    implementation libs.org.springframework.boot.spring.boot.starter.data.jpa
+    implementation libs.org.springframework.boot.spring.boot.starter.jdbc
+    implementation libs.org.springframework.kafka.spring.kafka
+    implementation libs.org.flywaydb.flyway.core
+    implementation libs.org.flywaydb.flyway.database.postgresql
+
+    // --- LOMBOK (Build time only) ---
+    compileOnly libs.org.projectlombok.lombok
+    annotationProcessor libs.org.projectlombok.lombok
+    testCompileOnly libs.org.projectlombok.lombok
+    testAnnotationProcessor libs.org.projectlombok.lombok
+
+    // --- RUNTIME ---
+    runtimeOnly libs.org.postgresql.postgresql
+
+    runtimeOnly 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations'
+
+    // --- TESTING ---
+    testImplementation libs.org.springframework.boot.spring.boot.starter.test
+    testImplementation libs.org.springframework.boot.spring.boot.testcontainers
+    testImplementation libs.org.springframework.kafka.spring.kafka.test
+
+    testImplementation 'org.spockframework:spock-core:2.4-groovy-4.0'
+    testImplementation 'org.spockframework:spock-spring:2.4-groovy-4.0'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Testcontainers & Utils
+    testImplementation libs.org.testcontainers.junit.jupiter
+    testImplementation libs.org.testcontainers.postgresql
+    testImplementation libs.org.testcontainers.kafka
+    testImplementation libs.org.wiremock.wiremock.standalone
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

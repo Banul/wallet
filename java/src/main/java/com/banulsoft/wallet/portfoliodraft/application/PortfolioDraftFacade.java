@@ -1,6 +1,5 @@
 package com.banulsoft.wallet.portfoliodraft.application;
 
-import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
 import com.banulsoft.wallet.portfolio.shared.AssetCreateCommand;
 import com.banulsoft.wallet.portfolio.shared.PortfolioCreateCommand;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraft;
@@ -20,14 +19,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PortfolioDraftFacade {
-    private final PortfolioDraftPersistancePort persistancePort;
+    private final PortfolioDraftPersistancePort persistencePort;
     private final ExistingCompaniesService existingCompaniesService;
     private final PortfolioOutboxFacade portfolioOutboxFacade;
 
     @Transactional
     public void create(PortfolioCreateCommand portfolioCreateCommand) {
         PortfolioDraft portfolioDraft = new PortfolioDraft(null, portfolioCreateCommand.name(), portfolioCreateCommand.assets());
-        PortfolioDraft savedEntity = persistancePort.save(portfolioDraft);
+        PortfolioDraft savedEntity = persistencePort.save(portfolioDraft);
         Set<String> tickers = portfolioDraft.getAssetsCreationRequests().stream()
                 .map(AssetCreateCommand::ticker)
                 .collect(Collectors.toSet());
@@ -37,7 +36,7 @@ public class PortfolioDraftFacade {
             portfolioOutboxFacade.send(new PortfolioSendToQueueCommand(portfolioCreateCommand.assets(), portfolioCreateCommand.name(), savedEntity.getId()));
         } else {
             portfolioDraft.markAsReadyForProcessing();
-            persistancePort.save(portfolioDraft);
+            persistencePort.save(portfolioDraft);
         }
     }
 
@@ -45,7 +44,7 @@ public class PortfolioDraftFacade {
     @Transactional
     public Set<PortfolioDraft> findValidPortfolios() {
         Set<PortfolioDraft> validPortfolios = new HashSet<>();
-        Set<PortfolioDraft> readyForProcessing = persistancePort.findPending();
+        Set<PortfolioDraft> readyForProcessing = persistencePort.findPending();
         readyForProcessing.forEach(draft -> {
             Set<String> requestedTickers = draft.getAssetsCreationRequests().stream()
                     .map(AssetCreateCommand::ticker)
@@ -60,7 +59,7 @@ public class PortfolioDraftFacade {
 
     @Transactional
     public void markAsCreated(UUID id) {
-        persistancePort.markAsCreated(id);
+        persistencePort.markAsCreated(id);
         portfolioOutboxFacade.markAsConsumed(id);
     }
 }

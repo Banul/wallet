@@ -1,15 +1,6 @@
-## ⚠️ Disclaimer
-
-This is a hobby project.
-
-**DO NOT use this software for making real financial decisions.**
-
-This software is provided "as is" without warranty of any kind, express or implied. 
-The author assumes no liability for any damages or losses arising from the use of this software.
-
 ## Project wallet
-Project walled is a web tool, that is still in very early devlopment phase (may have bugs). 
-As it evolved from POC it's missing tests for now (I focused mostly on useful capabilities). 
+Project walled is a web tool, that is still in very early devlopment phase (may have bugs).
+As it evolved from POC it's missing tests for now (I focused mostly on useful capabilities).
 
 Currently what project wallet can help you in:
 

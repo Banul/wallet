@@ -1,10 +1,27 @@
-HELP.md
+### System & Misc ###
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bin
+
+### Gradle ###
+.gradle/
+build/
+
+### Maven ###
 target/
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+dependency-reduced-pom.xml
 
-### STS ###
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Eclipse / STS / VS Code ###
 .apt_generated
 .classpath
 .factorypath
@@ -12,12 +29,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+bin/
 
 ### NetBeans ###
 /nbproject/private/
@@ -25,10 +37,6 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-.idea/
+### Python ###
 __pycache__/
-
