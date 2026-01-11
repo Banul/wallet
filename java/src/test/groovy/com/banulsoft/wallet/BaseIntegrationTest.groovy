@@ -11,8 +11,8 @@ import org.testcontainers.utility.DockerImageName
 import spock.lang.Shared
 import spock.lang.Specification
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)  // ← MOCK!
-@AutoConfigureMockMvc  // ← MockMvc DZIAŁA!
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 abstract class BaseIntegrationTest extends Specification {
 

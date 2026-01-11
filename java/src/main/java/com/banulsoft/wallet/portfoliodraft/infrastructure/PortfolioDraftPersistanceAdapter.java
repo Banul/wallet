@@ -2,6 +2,7 @@ package com.banulsoft.wallet.portfoliodraft.infrastructure;
 
 import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsException;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraft;
+import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftId;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftPersistancePort;
 import com.banulsoft.wallet.portfoliodraft.domain.DraftStatus;
 import org.springframework.stereotype.Repository;
@@ -42,5 +43,11 @@ public class PortfolioDraftPersistanceAdapter implements PortfolioDraftPersistan
         PortfolioDraftEntity portfolioDraftEntity = portfolioDraftJpaRepository.findById(id).orElseThrow(PortfolioNotExistsException::new);
         portfolioDraftEntity.setStatus(DraftStatus.CREATED);
         portfolioDraftJpaRepository.save(portfolioDraftEntity);
+    }
+
+    @Override
+    public Optional<PortfolioDraft> findById(PortfolioDraftId portfolioDraftId) {
+        return portfolioDraftJpaRepository.findById(portfolioDraftId.draftId())
+                .map(x -> new PortfolioDraft(x.getId(), x.getName(), x.getAssetsCreationRequests(), x.getStatus()));
     }
 }

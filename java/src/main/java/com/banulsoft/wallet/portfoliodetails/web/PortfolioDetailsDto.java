@@ -1,9 +1,11 @@
 package com.banulsoft.wallet.portfoliodetails.web;
 
 import com.banulsoft.wallet.portfoliodetails.domain.PortfolioDetails;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 class PortfolioDetailsDto {
     private final List<StockDetailDto> stockDetails;
     PortfolioDetailsDto(PortfolioDetails portfolioDetails) {
@@ -13,9 +15,5 @@ class PortfolioDetailsDto {
                 x.getIndustry(),
                 x.getCountry()
         )).toList();
-    }
-
-    public List<StockDetailDto> getStockDetails() {
-        return stockDetails;
     }
 }

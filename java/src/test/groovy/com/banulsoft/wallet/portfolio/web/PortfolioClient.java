@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.UUID;
+
 @Component
-class PortfolioClient {
+public class PortfolioClient {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
 
@@ -16,10 +18,16 @@ class PortfolioClient {
         this.objectMapper = objectMapper;
     }
 
-    public void createPortfolio(PortfolioCreateDto portfolioCreateDto) throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/portfolio")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(portfolioCreateDto)));
+    public UUID createPortfolio(PortfolioCreateDto portfolioCreateDto) throws Exception {
+        String jsonResponse = mockMvc.perform(MockMvcRequestBuilders.post("/portfolio")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(portfolioCreateDto)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        return objectMapper.readValue(jsonResponse, UUID.class);
     }
 
     public static AssetCreateDto asset(String ticker, double amount) {

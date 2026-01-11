@@ -3,6 +3,7 @@ package com.banulsoft.wallet.portfoliodraft.application;
 import com.banulsoft.wallet.portfolio.shared.AssetCreateCommand;
 import com.banulsoft.wallet.portfolio.shared.PortfolioCreateCommand;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraft;
+import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftId;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftPersistancePort;
 import com.banulsoft.wallet.portfoliodraft.infrastructure.ExistingCompaniesService;
 import com.banulsoft.wallet.portfoliodraft.infrastructure.PortfolioSendToQueueCommand;
@@ -24,7 +25,7 @@ public class PortfolioDraftFacade {
     private final PortfolioOutboxFacade portfolioOutboxFacade;
 
     @Transactional
-    public void create(PortfolioCreateCommand portfolioCreateCommand) {
+    public UUID create(PortfolioCreateCommand portfolioCreateCommand) {
         PortfolioDraft portfolioDraft = new PortfolioDraft(null, portfolioCreateCommand.name(), portfolioCreateCommand.assets());
         PortfolioDraft savedEntity = persistencePort.save(portfolioDraft);
         Set<String> tickers = portfolioDraft.getAssetsCreationRequests().stream()
@@ -38,6 +39,12 @@ public class PortfolioDraftFacade {
             portfolioDraft.markAsReadyForProcessing();
             persistencePort.save(portfolioDraft);
         }
+
+        return savedEntity.getId();
+    }
+
+    public PortfolioDraft findById(PortfolioDraftId id) {
+        return persistencePort.findById(id).orElseThrow(PortfolioDraftNotFoundException::new);
     }
 
     // valid portfolio means that is has only existing companies names
