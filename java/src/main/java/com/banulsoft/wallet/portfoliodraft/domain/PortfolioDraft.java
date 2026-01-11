@@ -14,7 +14,6 @@ public class PortfolioDraft {
     private UUID id;
     private String name;
     private final List<AssetCreateCommand> assetsCreationRequests;
-
     private DraftStatus draftStatus;
 
     public PortfolioDraft(UUID id, String name, List<AssetCreateCommand> assetsCreationRequests, DraftStatus draftStatus) {

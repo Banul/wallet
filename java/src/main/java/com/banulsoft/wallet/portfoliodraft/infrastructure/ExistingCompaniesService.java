@@ -1,19 +1,30 @@
 package com.banulsoft.wallet.portfoliodraft.infrastructure;
 
+import com.banulsoft.wallet.portfoliodraft.domain.TickerExistenceInformation;
+import com.banulsoft.wallet.shared.kafka.TickerDetailsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ExistingCompaniesService {
     private final JdbcTemplate jdbcTemplate;
+
+    public void handleTicker(TickerExistenceInformation information) {
+        boolean tickerExists = Objects.equals(information.getStatus(), "OK");
+        String sql = "INSERT INTO searched_companies (id, ticker, does_exist) VALUES (?, ?, ?) ON CONFLICT (ticker) DO NOTHING";
+        jdbcTemplate.update(sql, UUID.randomUUID(), information.getTicker(), tickerExists);
+        if (tickerExists) {
+            String sql2 = "INSERT INTO company_details (id, ticker, country, industry, sector, created_date) VALUES (?, ?, ?, ?, ?, ?)";
+            jdbcTemplate.update(sql2, UUID.randomUUID(), information.getTicker(), information.getCountry(), information.getIndustry(), information.getSector(), Timestamp.from(Instant.now()));
+        }
+    }
 
     public boolean allNamesExist(Set<String> tickers) {
         if (tickers.isEmpty()) {

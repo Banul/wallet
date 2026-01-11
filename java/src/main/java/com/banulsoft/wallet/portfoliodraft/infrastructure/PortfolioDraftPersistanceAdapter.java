@@ -5,8 +5,10 @@ import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraft;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftId;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftPersistancePort;
 import com.banulsoft.wallet.portfoliodraft.domain.DraftStatus;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -39,6 +41,7 @@ public class PortfolioDraftPersistanceAdapter implements PortfolioDraftPersistan
     }
 
     @Override
+    @Transactional
     public void markAsCreated(UUID id) {
         PortfolioDraftEntity portfolioDraftEntity = portfolioDraftJpaRepository.findById(id).orElseThrow(PortfolioNotExistsException::new);
         portfolioDraftEntity.setStatus(DraftStatus.CREATED);
@@ -49,5 +52,16 @@ public class PortfolioDraftPersistanceAdapter implements PortfolioDraftPersistan
     public Optional<PortfolioDraft> findById(PortfolioDraftId portfolioDraftId) {
         return portfolioDraftJpaRepository.findById(portfolioDraftId.draftId())
                 .map(x -> new PortfolioDraft(x.getId(), x.getName(), x.getAssetsCreationRequests(), x.getStatus()));
+    }
+
+    @Override
+    public void update(PortfolioDraft portfolioDraft) {
+        PortfolioDraftEntity portfolioDraftEntity = portfolioDraftJpaRepository.findById(portfolioDraft.getId())
+                .orElseThrow(PortfolioNotExistsException::new);
+
+        portfolioDraftEntity.setName(portfolioDraft.getName());
+        portfolioDraftEntity.setAssetsCreationRequests(portfolioDraft.getAssetsCreationRequests());
+        portfolioDraftEntity.setStatus(portfolioDraft.getStatus());
+        portfolioDraftJpaRepository.save(portfolioDraftEntity);
     }
 }

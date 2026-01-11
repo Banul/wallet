@@ -27,20 +27,20 @@ public class PortfolioDraftFacade {
     @Transactional
     public UUID create(PortfolioCreateCommand portfolioCreateCommand) {
         PortfolioDraft portfolioDraft = new PortfolioDraft(null, portfolioCreateCommand.name(), portfolioCreateCommand.assets());
-        PortfolioDraft savedEntity = persistencePort.save(portfolioDraft);
+        PortfolioDraft savedDraft = persistencePort.save(portfolioDraft);
         Set<String> tickers = portfolioDraft.getAssetsCreationRequests().stream()
                 .map(AssetCreateCommand::ticker)
                 .collect(Collectors.toSet());
 
         if (!existingCompaniesService.allNamesExist(tickers)) {
             // todo - send only ones that not exists (not all)
-            portfolioOutboxFacade.send(new PortfolioSendToQueueCommand(portfolioCreateCommand.assets(), portfolioCreateCommand.name(), savedEntity.getId()));
+            portfolioOutboxFacade.send(new PortfolioSendToQueueCommand(portfolioCreateCommand.assets(), portfolioCreateCommand.name(), savedDraft.getId()));
         } else {
-            portfolioDraft.markAsReadyForProcessing();
-            persistencePort.save(portfolioDraft);
+            savedDraft.markAsReadyForProcessing();
+            persistencePort.update(savedDraft);
         }
 
-        return savedEntity.getId();
+        return savedDraft.getId();
     }
 
     public PortfolioDraft findById(PortfolioDraftId id) {
@@ -49,19 +49,19 @@ public class PortfolioDraftFacade {
 
     // valid portfolio means that is has only existing companies names
     @Transactional
-    public Set<PortfolioDraft> findValidPortfolios() {
-        Set<PortfolioDraft> validPortfolios = new HashSet<>();
+    public Set<PortfolioDraft> findPendingDrafts() {
+        Set<PortfolioDraft> pendingPortfolios = new HashSet<>();
         Set<PortfolioDraft> readyForProcessing = persistencePort.findPending();
         readyForProcessing.forEach(draft -> {
             Set<String> requestedTickers = draft.getAssetsCreationRequests().stream()
                     .map(AssetCreateCommand::ticker)
                     .collect(Collectors.toSet());
             if (existingCompaniesService.allNamesExist(requestedTickers)) {
-                validPortfolios.add(draft);
+                pendingPortfolios.add(draft);
             }
         });
 
-        return validPortfolios;
+        return pendingPortfolios;
     }
 
     @Transactional

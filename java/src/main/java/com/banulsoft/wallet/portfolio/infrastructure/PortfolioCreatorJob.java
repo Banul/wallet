@@ -4,9 +4,6 @@ import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
 import com.banulsoft.wallet.portfolio.domain.Portfolio;
 import com.banulsoft.wallet.portfoliodraft.application.PortfolioDraftFacade;
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraft;
-import com.banulsoft.wallet.portfoliooutbox.domain.PortfolioOutbox;
-import com.banulsoft.wallet.portfolio.domain.Position;
-import com.banulsoft.wallet.shared.Ticker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -26,9 +22,9 @@ class PortfolioCreatorJob {
 
     @Scheduled(fixedRate = 10000)
     public void createPortfolios() {
-        Set<PortfolioDraft> validPortfolios = portfolioDraftFacade.findValidPortfolios();
+        Set<PortfolioDraft> validDrafts = portfolioDraftFacade.findPendingDrafts();
 
-        validPortfolios.forEach(draft -> {
+        validDrafts.forEach(draft -> {
             Portfolio portfolio = draft.toPortfolio();
             try {
                 transactionTemplate.executeWithoutResult(status -> {
