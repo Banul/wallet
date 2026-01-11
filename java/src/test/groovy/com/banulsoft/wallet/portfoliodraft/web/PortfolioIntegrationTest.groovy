@@ -16,15 +16,15 @@ class PortfolioIntegrationTest extends BaseIntegrationTest {
 
     def "should create draft firstly after user requests portfolio creation"() {
         given:
-        def dto = new PortfolioCreateDto("somePortfolio", [new AssetCreateDto("SNT.WA", 10)])
+          def dto = new PortfolioCreateDto("somePortfolio", [new AssetCreateDto("SNT.WA", 10)])
 
         when: 'portfolio creation is requested'
-        UUID draftId = portfolioClient.createPortfolio(dto)
+          UUID draftId = portfolioClient.createPortfolio(dto)
 
         then:
-        PortfolioDraftResponseDto draft = portfolioDraftClient.getDraft(new PortfolioDraftId(draftId))
-        draft.id() != null
-        draft.assets().size() == 1
-        draft.name() != null
+          PortfolioDraftResponseDto draft = portfolioDraftClient.getDraft(new PortfolioDraftId(draftId))
+          draft.id() != null
+          draft.assets().size() == 1
+          draft.name() != null
     }
 }
