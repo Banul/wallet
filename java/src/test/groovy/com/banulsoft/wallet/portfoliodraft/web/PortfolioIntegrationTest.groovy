@@ -2,7 +2,6 @@ package com.banulsoft.wallet.portfoliodraft.web
 
 import com.banulsoft.wallet.BaseIntegrationTest
 import com.banulsoft.wallet.portfolio.web.AssetCreateDto
-import com.banulsoft.wallet.portfolio.web.PortfolioClient
 import com.banulsoft.wallet.portfolio.web.PortfolioCreateDto
 import com.banulsoft.wallet.portfoliodraft.domain.PortfolioDraftId
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +20,7 @@ class PortfolioIntegrationTest extends BaseIntegrationTest {
         when: 'portfolio creation is requested'
           UUID draftId = portfolioClient.createPortfolio(dto)
 
-        then:
+        then: 'draft is created'
           PortfolioDraftResponseDto draft = portfolioDraftClient.getDraft(new PortfolioDraftId(draftId))
           draft.id() != null
           draft.assets().size() == 1

@@ -28,7 +28,6 @@ public class PortfolioValuationFacade {
     private final BigDecimal DKK_VAL = BigDecimal.valueOf(0.57);
     private final PortfolioFacade portfolioFacade;
     private final StockValuationFacade stockValuationFacade;
-    private final PortfolioValuationPort portfolioValuationPort;
 
     // todo - for now just in pln, enable more currencies
     public PortfolioValue calculate(UUID portfolioId) {

@@ -7,7 +7,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @Component
-public class PortfolioDraftClient {
+class PortfolioDraftClient {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
 

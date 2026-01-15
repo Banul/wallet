@@ -76,6 +76,27 @@ tasks.named('test') {
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                def ANSI_RESET = "\u001B[0m"
+                def ANSI_RED = "\u001B[31m"
+                def ANSI_GREEN = "\u001B[32m"
+                def ANSI_BOLD = "\u001B[1m"
+
+                // Choose color: Green for Success, Red for Failure
+                def color = result.resultType.toString() == 'SUCCESS' ? ANSI_GREEN : ANSI_RED
+
+                println ""
+                println "${color}${ANSI_BOLD}" + ("-" * 60) + "${ANSI_RESET}"
+                println "${color}${ANSI_BOLD}TEST RESULT: ${result.resultType}${ANSI_RESET}"
+                println "${color}SUMMARY:     ${result.testCount} tests, " +
+                        "${result.successfulTestCount} passed, " +
+                        "${result.failedTestCount} failed, " +
+                        "${result.skippedTestCount} skipped${ANSI_RESET}"
+                println "${color}${ANSI_BOLD}" + ("-" * 60) + "${ANSI_RESET}"
+                println ""
+            }
+        }
     }
 }
 
