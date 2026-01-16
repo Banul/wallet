@@ -31,7 +31,7 @@ class PortfolioStatisticsMapper {
 
     private IndustryShareDto toIndustryShareDto(SectorShare sectorShare) {
         return new IndustryShareDto(
-                sectorShare.sector().industry(),
+                sectorShare.sectorName().industry(),
                 sectorShare.percent().value()
         );
     }

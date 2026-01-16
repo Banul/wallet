@@ -1,12 +1,9 @@
 package com.banulsoft.wallet.portfoliovaluation.application;
 
-import com.banulsoft.wallet.portfolio.application.PortfolioBaseInformation;
 import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
-import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsException;
 import com.banulsoft.wallet.portfolio.domain.*;
 import com.banulsoft.wallet.portfoliovaluation.domain.PortfolioValuation;
 import com.banulsoft.wallet.portfoliovaluation.domain.PortfolioValuationBaseInformation;
-import com.banulsoft.wallet.portfoliovaluation.domain.PortfolioValuationPort;
 import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.stockvaluation.application.StockValuationFacade;
 import com.banulsoft.wallet.stockvaluation.domain.Currency;

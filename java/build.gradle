@@ -34,6 +34,7 @@ dependencies {
     implementation libs.org.springframework.kafka.spring.kafka
     implementation libs.org.flywaydb.flyway.core
     implementation libs.org.flywaydb.flyway.database.postgresql
+    implementation("com.google.guava:guava:33.5.0-jre")
 
     // --- LOMBOK (Build time only) ---
     compileOnly libs.org.projectlombok.lombok

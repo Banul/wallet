@@ -1,13 +1,13 @@
 package com.banulsoft.wallet.portfoliostatistics.domain;
 
-import com.banulsoft.wallet.shared.Sector;
+import com.banulsoft.wallet.shared.SectorName;
 import com.banulsoft.wallet.shared.Percent;
 
 import java.util.Objects;
 
-public record SectorShare(Sector sector, Percent percent) {
+public record SectorShare(SectorName sectorName, Percent percent) {
     public SectorShare {
-        Objects.requireNonNull(sector);
+        Objects.requireNonNull(sectorName);
         Objects.requireNonNull(percent);
     }
 }

@@ -1,8 +1,5 @@
 package com.banulsoft.wallet.portfoliostatistics.application;
 
-import com.banulsoft.wallet.portfolio.application.PortfolioBaseInformation;
-import com.banulsoft.wallet.portfolio.application.PortfolioFacade;
-import com.banulsoft.wallet.portfolio.application.exception.PortfolioNotExistsException;
 import com.banulsoft.wallet.portfolio.domain.PortfolioId;
 import com.banulsoft.wallet.portfolio.domain.TickerValue;
 import com.banulsoft.wallet.portfoliostatistics.domain.CountryShare;
@@ -10,12 +7,14 @@ import com.banulsoft.wallet.portfoliostatistics.domain.SectorShare;
 import com.banulsoft.wallet.portfoliostatistics.domain.PortfolioStatistics;
 import com.banulsoft.wallet.portfoliovaluation.application.PortfolioValuationFacade;
 import com.banulsoft.wallet.shared.CountryCode;
-import com.banulsoft.wallet.shared.Sector;
+import com.banulsoft.wallet.shared.SectorName;
 import com.banulsoft.wallet.shared.Percent;
 import com.banulsoft.wallet.shared.Ticker;
 import com.banulsoft.wallet.stockinformation.application.StockInformationFacade;
 import com.banulsoft.wallet.stockinformation.domain.StockInformation;
+import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,8 +25,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PortfolioStatisticsFacade {
     private final StockInformationFacade stockInformationFacade;
     private final PortfolioValuationFacade portfolioValuationFacade;
@@ -48,9 +49,19 @@ public class PortfolioStatisticsFacade {
                 .map(TickerValue::ticker)
                 .collect(Collectors.toSet());
 
-        Set<StockInformation> stockInformations = stockInformationFacade.findByTickers(tickers);
+        Set<StockInformation> stockInformation = stockInformationFacade.findByTickers(tickers);
 
-        return stockInformations.stream()
+        Set<Ticker> foundTickers = stockInformation.stream()
+                .map(StockInformation::getTicker)
+                .collect(Collectors.toSet());
+
+        if (stockInformation.size() != tickers.size()) {
+            log.warn("Could not find information for tickers: {}", Sets.difference(foundTickers, stockInformation).stream()
+                    .map(Ticker::name)
+                    .collect(Collectors.joining()));
+        }
+
+        return stockInformation.stream()
                 .collect(Collectors.toMap(StockInformation::getTicker, Function.identity()));
     }
 
@@ -75,7 +86,7 @@ public class PortfolioStatisticsFacade {
             Map<Ticker, StockInformation> stockInfoMap,
             BigDecimal totalValue) {
 
-        Map<Sector, BigDecimal> industryValues = aggregateValuesByIndustry(tickerValues, stockInfoMap);
+        Map<SectorName, BigDecimal> industryValues = aggregateValuesByIndustry(tickerValues, stockInfoMap);
 
         return industryValues.entrySet().stream()
                 .map(entry -> new SectorShare(entry.getKey(), calculatePercent(entry.getValue(), totalValue)))
@@ -104,11 +115,11 @@ public class PortfolioStatisticsFacade {
         return countryValues;
     }
 
-    private Map<Sector, BigDecimal> aggregateValuesByIndustry(
+    private Map<SectorName, BigDecimal> aggregateValuesByIndustry(
             List<TickerValue> tickerValues,
             Map<Ticker, StockInformation> stockInfoMap) {
 
-        Map<Sector, BigDecimal> industryValues = new HashMap<>();
+        Map<SectorName, BigDecimal> industryValues = new HashMap<>();
 
         for (TickerValue tickerValue : tickerValues) {
             StockInformation stockInfo = stockInfoMap.get(tickerValue.ticker());
@@ -119,8 +130,8 @@ public class PortfolioStatisticsFacade {
 
             String sectorName = stockInfo.getSector().getName();
             if (sectorName != null && !sectorName.isBlank()) {
-                Sector sector = new Sector(sectorName);
-                industryValues.merge(sector, tickerValue.value(), BigDecimal::add);
+                SectorName industry = new SectorName(sectorName);
+                industryValues.merge(industry, tickerValue.value(), BigDecimal::add);
             }
         }
 
