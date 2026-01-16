@@ -26,21 +26,12 @@ public class PortfolioValuationFacade {
     private final PortfolioFacade portfolioFacade;
     private final StockValuationFacade stockValuationFacade;
 
-    // todo - for now just in pln, enable more currencies
-    public PortfolioValue calculate(UUID portfolioId) {
-        BigDecimal value = valuePerTicker(new PortfolioId(portfolioId))
-                .map(TickerValue::value)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return new PortfolioValue(value);
-    }
-
     public List<PortfolioValuation> getValuationForAllPortfolios() {
         List<PortfolioValuation> portfolioValuations = new ArrayList<>();
         List<Portfolio> portfolios = portfolioFacade.findAll();
         for (Portfolio portfolio : portfolios) {
-            PortfolioValue portfolioValue = calculate(portfolio.getId());
-            portfolioValuations.add(new PortfolioValuation(new Valuation(portfolioValue.price(), Currency.PLN), new PortfolioValuationBaseInformation(new PortfolioId(portfolio.getId()), portfolio.getName())));
+            BigDecimal portfolioValue = calculate(portfolio.getId());
+            portfolioValuations.add(new PortfolioValuation(new Valuation(portfolioValue, Currency.PLN), new PortfolioValuationBaseInformation(new PortfolioId(portfolio.getId()), portfolio.getName())));
         }
 
         return portfolioValuations;
@@ -48,9 +39,9 @@ public class PortfolioValuationFacade {
 
     public PortfolioValuation getValuationForPortfolio(UUID portfolioId) {
         Portfolio portfolio = portfolioFacade.findById(portfolioId);
-        PortfolioValue portfolioValue = calculate(portfolioId);
+        BigDecimal portfolioValue = calculate(portfolioId);
         return new PortfolioValuation(
-                new Valuation(portfolioValue.price(), Currency.PLN),
+                new Valuation(portfolioValue, Currency.PLN),
                 new PortfolioValuationBaseInformation(new PortfolioId(portfolioId), portfolio.getName()));
     }
 
@@ -58,6 +49,12 @@ public class PortfolioValuationFacade {
         return valuePerTicker(portfolioId).toList();
     }
 
+    // todo - for now just in pln, enable more currencies
+    private BigDecimal calculate(UUID portfolioId) {
+        return valuePerTicker(new PortfolioId(portfolioId))
+                .map(TickerValue::value)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
     private Stream<TickerValue> valuePerTicker(PortfolioId portfolioId) {
         Portfolio portfolio = portfolioFacade.findById(portfolioId.id());

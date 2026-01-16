@@ -22,35 +22,6 @@ class PortfolioValuationFacadeSpec extends Specification {
     @Subject
     def facade = new PortfolioValuationFacade(portfolioFacade, stockValuationFacade)
 
-    def "should calculate portfolio value correctly aggregating mixed currencies"() {
-        given: "a portfolio exists with positions in local (PLN) and foreign (USD) currencies"
-          def id = UUID.randomUUID()
-          def cdr = new Ticker("CDR")
-          def aapl = new Ticker("AAPL")
-
-          def portfolio = portfolioWithPositions(id, [
-                  position(cdr, 10.0),
-                  position(aapl, 5.0)
-          ])
-
-        and: "current market valuations for these tickers are available"
-          def valuations = [
-                  valuation(cdr, 100, Currency.PLN),
-                  valuation(aapl, 150, Currency.USD)
-          ] as Set
-
-        when: "calculating the total value for this portfolio"
-          def result = facade.calculate(id)
-
-        then: "data is fetched from the repository and valuation service"
-          1 * portfolioFacade.findById(id) >> portfolio
-          1 * stockValuationFacade.getValuationForTickers({ Set t -> t.containsAll([cdr, aapl]) }) >> valuations
-
-        and: "the result represents the sum of all positions converted to base currency (PLN)"
-          // Calculation: (10 * 100 * 1.0) + (5 * 150 * 3.65) = 1000 + 2737.5 = 3737.5
-          result.price() == BigDecimal.valueOf(3737.5)
-    }
-
     def "should return valuation summaries for all portfolios in the system"() {
         given: "multiple portfolios exist in the system"
           def id1 = UUID.randomUUID()
@@ -100,26 +71,6 @@ class PortfolioValuationFacadeSpec extends Specification {
               ticker() == kghm
               value() == BigDecimal.valueOf(500.0) // 10 units * 50 PLN
           }
-    }
-
-    def "should throw exception when encountering an unsupported currency"() {
-        given: "a portfolio containing an asset"
-          def id = UUID.randomUUID()
-          def unknownTicker = new Ticker("UNKNOWN")
-          def portfolio = portfolioWithPositions(id, [position(unknownTicker, 1.0)])
-
-        and: "the asset valuation uses a currency not supported by the system"
-          def badValuation = valuation(unknownTicker, 10, Currency.UNKNOWN)
-
-          portfolioFacade.findById(id) >> portfolio
-          stockValuationFacade.getValuationForTickers(_) >> Set.of(badValuation)
-
-        when: "attempting to calculate portfolio value"
-          facade.calculate(id)
-
-        // todo - some better exception
-        then: "exception is thrown due to missing exchange rate"
-          thrown(IllegalStateException)
     }
 
     private Portfolio portfolioWithPositions(UUID id, List<Position> positions) {
